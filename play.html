@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Équipe — Questionnaire en classe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="board">
+  <div class="wrap">
+
+    <!-- Écran : rejoindre -->
+    <section id="join-screen">
+      <h1 style="text-align:center;">Rejoindre la partie</h1>
+      <form class="join-form" id="join-form">
+        <div>
+          <span class="room-code-label">Code de la partie</span>
+          <input type="text" id="room-code-input" inputmode="numeric" maxlength="4" placeholder="1234" autocomplete="off">
+        </div>
+        <div>
+          <span class="room-code-label">Nom de l'équipe</span>
+          <input type="text" id="team-name-input" maxlength="24" placeholder="Les Champions" autocomplete="off">
+        </div>
+        <button class="primary" type="submit">Rejoindre</button>
+        <p class="error-text" id="join-error"></p>
+      </form>
+    </section>
+
+    <!-- Écran : salle d'attente -->
+    <section id="waiting-screen" style="display:none;">
+      <div class="center-note" style="padding-top:4rem;">
+        <p class="room-code-label">Équipe</p>
+        <h1 id="waiting-team-name"></h1>
+        <p style="margin-top:1rem;">En attente que l'animateur commence la partie…</p>
+      </div>
+    </section>
+
+    <!-- Écran : question en cours -->
+    <section id="question-screen" style="display:none;">
+      <div class="top-row">
+        <span class="status-pill" id="my-score-pill">0 point</span>
+        <span class="status-pill" id="my-progress"></span>
+      </div>
+      <div class="panel">
+        <h2 class="question-text" id="team-question-text"></h2>
+        <div class="choices-grid" id="team-choices-grid"></div>
+      </div>
+      <p class="center-note" id="waiting-for-others" style="display:none;">Réponse envoyée — en attente des autres équipes…</p>
+    </section>
+
+    <!-- Écran : réponse révélée -->
+    <section id="reveal-screen" style="display:none;">
+      <div class="panel">
+        <h2 class="question-text" id="team-reveal-text"></h2>
+        <div class="choices-grid" id="team-reveal-grid"></div>
+        <p style="margin-top:1rem; text-align:center; font-family: var(--font-display); font-size:1.3rem;" id="reveal-verdict"></p>
+      </div>
+    </section>
+
+    <!-- Écran : fin -->
+    <section id="team-finished-screen" style="display:none;">
+      <h1 style="text-align:center; margin-bottom:1.5rem;">Résultats finaux</h1>
+      <ul class="team-list" id="team-final-scoreboard"></ul>
+    </section>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/play.js"></script>
+</body>
+</html>

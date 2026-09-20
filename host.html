@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animateur — Questionnaire en classe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="board">
+  <div class="wrap">
+
+    <!-- Écran : avant la création de la partie -->
+    <section id="setup-screen" class="center-note" style="padding-top:4rem;">
+      <h1 style="margin-bottom:0.6rem;">Prêt à démarrer ?</h1>
+      <p>Un code de partie va être généré. Donne-le aux équipes pour qu'elles le saisissent sur leur appareil.</p>
+      <button class="primary" id="create-game-btn" style="margin-top:1.2rem;">Créer la partie</button>
+      <p class="error-text" id="setup-error"></p>
+    </section>
+
+    <!-- Écran : jeu en cours -->
+    <section id="game-screen" style="display:none;">
+      <div class="top-row">
+        <div>
+          <span class="room-code-label">Code de la partie</span>
+          <div class="room-code" id="room-code-display">----</div>
+        </div>
+        <span class="status-pill" id="status-pill">Salle d'attente</span>
+      </div>
+
+      <div class="panel" id="lobby-panel">
+        <h2 style="margin-bottom:0.8rem; font-size:1.1rem;">Équipes présentes (<span id="team-count">0</span>)</h2>
+        <ul class="team-list" id="lobby-team-list"></ul>
+        <button class="primary" id="start-game-btn" style="margin-top:1.2rem;" disabled>Commencer la partie</button>
+      </div>
+
+      <div class="panel" id="question-panel" style="display:none;">
+        <span class="room-code-label" id="question-progress"></span>
+        <h2 class="question-text" id="host-question-text"></h2>
+        <div class="choices-grid" id="host-choices-grid"></div>
+        <p style="margin-top:1rem; color: var(--chalk-dim);"><span id="answered-count">0</span> / <span id="team-count-2">0</span> équipes ont répondu</p>
+        <button class="primary" id="reveal-btn" style="margin-top:0.8rem;">Révéler la réponse</button>
+      </div>
+
+      <div class="panel" id="reveal-panel" style="display:none;">
+        <p class="room-code-label">Bonne réponse</p>
+        <h2 class="question-text" id="reveal-question-text"></h2>
+        <button class="primary" id="next-btn" style="margin-top:0.8rem;">Question suivante</button>
+      </div>
+
+      <div class="panel">
+        <h2 style="margin-bottom:0.8rem; font-size:1.1rem;">Pointage</h2>
+        <ul class="team-list" id="scoreboard-list"></ul>
+      </div>
+    </section>
+
+    <!-- Écran : partie terminée -->
+    <section id="finished-screen" style="display:none;">
+      <h1 style="text-align:center; margin-bottom:1.5rem;">Résultats finaux</h1>
+      <ul class="team-list" id="final-scoreboard"></ul>
+      <p style="text-align:center; margin-top:2rem;">
+        <a class="btn" href="host.html">Nouvelle partie</a>
+      </p>
+    </section>
+
+    <footer class="hint">Garde cet écran affiché — c'est ce que les équipes regardent pendant le jeu.</footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/host.js"></script>
+</body>
+</html>
