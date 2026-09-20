@@ -81,18 +81,38 @@ tu peux directement écraser.
    équipe**, entre le code et un nom d'équipe.
 3. Une fois toutes les équipes présentes, clique **Commencer la partie** sur
    l'écran animateur.
-4. Pour chaque question : laisse les équipes répondre, clique **Révéler la
-   réponse** (les points sont calculés automatiquement), puis **Question
-   suivante**.
+4. Pour chaque question, un chrono se lance automatiquement. La bonne réponse
+   est révélée dès que toutes les équipes présentes ont répondu, ou dès que
+   le temps est écoulé — pas besoin de cliquer, sauf si tu veux forcer la
+   révélation plus tôt (bouton **Révéler la réponse maintenant**). Clique
+   ensuite **Question suivante**.
 5. À la fin, le classement final s'affiche sur tous les écrans.
+
+## Écrire des mathématiques en LaTeX
+
+Le texte d'une question et ses choix de réponse peuvent contenir du LaTeX,
+rendu automatiquement par KaTeX. Entoure ta formule de `$...$` pour du texte
+en ligne, ou `$$...$$` pour une formule centrée sur sa propre ligne. Comme
+c'est écrit dans une chaîne JavaScript, double chaque backslash du LaTeX :
+`\frac` devient `\\frac`, `\int` devient `\\int`, etc. Exemple, dans
+`js/questions.js` :
+```js
+text: "$$F(x) = \\int_{-\\infty}^{x} f(t)\\,dt$$"
+```
+
+## Chrono et pointage selon la rapidité
+
+Chaque question a une limite de temps (`timeLimit`, en secondes, réglable
+dans `js/questions.js`). Une bonne réponse rapporte entre 50 % et 100 % des
+points maximum de la question (`points` dans `js/questions.js`), selon la
+vitesse de réponse : répondre instantanément rapporte le plein montant,
+répondre juste avant la fin du chrono rapporte la moitié. Une équipe qui ne
+répond pas à temps ne reçoit aucun point pour cette question.
 
 ## Limites à connaître (et pistes d'amélioration)
 
 - Les équipes ne peuvent rejoindre qu'avant le début de la partie (pas en
   cours de route).
-- Le pointage est fixe par question (pas de bonus de rapidité) — tu peux en
-  ajouter un dans `js/host.js`, à l'endroit où les points sont calculés lors
-  de la révélation.
 - Les règles Firebase en mode test expirent après 30 jours ; il suffit d'y
   retourner et de les remettre (voir Étape 1.4) si tu réutilises le projet
   plus tard.

@@ -6,6 +6,7 @@
 <title>Animateur — Questionnaire en classe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="board">
@@ -36,11 +37,15 @@
       </div>
 
       <div class="panel" id="question-panel" style="display:none;">
-        <span class="room-code-label" id="question-progress"></span>
+        <div class="timer-row">
+          <span class="room-code-label" id="question-progress"></span>
+          <span class="timer-seconds" id="timer-seconds">--</span>
+        </div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
         <h2 class="question-text" id="host-question-text"></h2>
         <div class="choices-grid" id="host-choices-grid"></div>
         <p style="margin-top:1rem; color: var(--chalk-dim);"><span id="answered-count">0</span> / <span id="team-count-2">0</span> équipes ont répondu</p>
-        <button class="primary" id="reveal-btn" style="margin-top:0.8rem;">Révéler la réponse</button>
+        <button class="primary" id="reveal-btn" style="margin-top:0.8rem;">Révéler la réponse maintenant</button>
       </div>
 
       <div class="panel" id="reveal-panel" style="display:none;">
@@ -67,6 +72,9 @@
     <footer class="hint">Garde cet écran affiché — c'est ce que les équipes regardent pendant le jeu.</footer>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="js/katex-config.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="js/firebase-config.js"></script>

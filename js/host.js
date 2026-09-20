@@ -21,6 +21,8 @@
   const hostChoicesGrid = document.getElementById('host-choices-grid');
   const answeredCountEl = document.getElementById('answered-count');
   const revealBtn = document.getElementById('reveal-btn');
+  const timerSecondsEl = document.getElementById('timer-seconds');
+  const timerFillEl = document.getElementById('timer-fill');
 
   const revealPanel = document.getElementById('reveal-panel');
   const revealQuestionText = document.getElementById('reveal-question-text');
@@ -34,12 +36,18 @@
   let teams = {}; // teamId -> {name, score}
   let teamOrder = []; // preserves join order for consistent colours
 
+  let currentIdx = -1;
+  let questionStartedAt = null;
+  let revealedForCurrent = false;
+  let timerInterval = null;
+  let answersRef = null; // currently attached answers/{idx} listener ref
+
   function makeRoomCode() {
     return String(Math.floor(1000 + Math.random() * 9000));
   }
 
   function publicQuestions() {
-    return QUESTIONS.map(q => ({ text: q.text, choices: q.choices }));
+    return QUESTIONS.map(q => ({ text: q.text, choices: q.choices, timeLimit: q.timeLimit || 20 }));
   }
 
   function renderTeamList(el, sortByScore) {
@@ -79,6 +87,8 @@
     gameRef.set({
       status: 'lobby',
       currentQuestion: -1,
+      questionStartedAt: null,
+      revealCorrectIndex: null,
       createdAt: firebase.database.ServerValue.TIMESTAMP,
       questions: publicQuestions(),
       teams: {}
@@ -130,8 +140,11 @@
     gameRef.child('currentQuestion').on('value', snap => {
       const idx = snap.val();
       if (idx === null || idx < 0) return;
+      currentIdx = idx;
+      revealedForCurrent = false;
       const q = QUESTIONS[idx];
       if (!q) return;
+
       questionProgress.textContent = `Question ${idx + 1} / ${QUESTIONS.length}`;
       hostQuestionText.textContent = q.text;
       revealQuestionText.textContent = q.text;
@@ -143,55 +156,115 @@
         div.dataset.index = i;
         hostChoicesGrid.appendChild(div);
       });
+      renderMathIn(hostQuestionText);
+      renderMathIn(revealQuestionText);
+      renderMathIn(hostChoicesGrid);
       answeredCountEl.textContent = '0';
 
-      gameRef.child('answers/' + idx).off();
-      gameRef.child('answers/' + idx).on('value', ansSnap => {
+      if (answersRef) answersRef.off();
+      answersRef = gameRef.child('answers/' + idx);
+      answersRef.on('value', ansSnap => {
         const answers = ansSnap.val() || {};
-        answeredCountEl.textContent = Object.keys(answers).length;
+        const count = Object.keys(answers).length;
+        answeredCountEl.textContent = count;
+        const teamCount = Object.keys(teams).length;
+        if (teamCount > 0 && count >= teamCount) {
+          triggerReveal();
+        }
       });
+    });
+
+    gameRef.child('questionStartedAt').on('value', snap => {
+      questionStartedAt = snap.val();
+      if (questionStartedAt) startCountdown();
+    });
+  }
+
+  function startCountdown() {
+    if (timerInterval) clearInterval(timerInterval);
+    const idx = currentIdx;
+    const q = QUESTIONS[idx];
+    if (!q) return;
+    const timeLimit = q.timeLimit || 20;
+    const localStart = Date.now();
+
+    function tick() {
+      const elapsed = (Date.now() - localStart) / 1000;
+      const remaining = Math.max(0, timeLimit - elapsed);
+      timerSecondsEl.textContent = Math.ceil(remaining) + ' s';
+      timerFillEl.style.width = (remaining / timeLimit) * 100 + '%';
+      timerFillEl.classList.toggle('is-low', remaining <= timeLimit * 0.25);
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        triggerReveal();
+      }
+    }
+    tick();
+    timerInterval = setInterval(tick, 200);
+  }
+
+  function triggerReveal() {
+    if (revealedForCurrent) return;
+    revealedForCurrent = true;
+    if (timerInterval) clearInterval(timerInterval);
+    revealAnswer();
+  }
+
+  function revealAnswer() {
+    const idx = currentIdx;
+    const q = QUESTIONS[idx];
+    const timeLimitMs = (q.timeLimit || 20) * 1000;
+    Promise.all([
+      gameRef.child('answers/' + idx).get(),
+      gameRef.child('questionStartedAt').get()
+    ]).then(([ansSnap, startSnap]) => {
+      const answers = ansSnap.val() || {};
+      const startedAt = startSnap.val() || Date.now();
+      const updates = {};
+      Object.entries(answers).forEach(([teamId, ans]) => {
+        if (ans.choiceIndex === q.correctIndex) {
+          const elapsed = Math.max(0, (ans.timestamp || startedAt) - startedAt);
+          const remainingFraction = Math.max(0, Math.min(1, 1 - elapsed / timeLimitMs));
+          // 50% des points garantis pour une bonne réponse, jusqu'à 100% si répondu instantanément.
+          const earned = Math.round(q.points * (0.5 + 0.5 * remainingFraction));
+          const current = (teams[teamId] && teams[teamId].score) || 0;
+          updates['teams/' + teamId + '/score'] = current + earned;
+        }
+      });
+      Array.from(hostChoicesGrid.children).forEach(div => {
+        const i = Number(div.dataset.index);
+        if (i === q.correctIndex) div.classList.add('is-correct');
+      });
+      updates['status'] = 'reveal';
+      updates['revealCorrectIndex'] = q.correctIndex;
+      gameRef.update(updates);
+    });
+  }
+
+  function startQuestion(idx) {
+    revealedForCurrent = false;
+    gameRef.update({
+      status: 'question',
+      currentQuestion: idx,
+      questionStartedAt: firebase.database.ServerValue.TIMESTAMP,
+      revealCorrectIndex: null
     });
   }
 
   startGameBtn.addEventListener('click', () => {
-    gameRef.update({ status: 'question', currentQuestion: 0 });
+    startQuestion(0);
   });
 
   revealBtn.addEventListener('click', () => {
-    const idxRef = gameRef.child('currentQuestion');
-    idxRef.get().then(snap => {
-      const idx = snap.val();
-      const q = QUESTIONS[idx];
-      gameRef.child('answers/' + idx).get().then(ansSnap => {
-        const answers = ansSnap.val() || {};
-        const updates = {};
-        Object.entries(answers).forEach(([teamId, ans]) => {
-          if (ans.choiceIndex === q.correctIndex) {
-            const current = (teams[teamId] && teams[teamId].score) || 0;
-            updates['teams/' + teamId + '/score'] = current + q.points;
-          }
-        });
-        // Mark choices as correct/wrong visually for the host
-        Array.from(hostChoicesGrid.children).forEach(div => {
-          const i = Number(div.dataset.index);
-          if (i === q.correctIndex) div.classList.add('is-correct');
-        });
-        updates['status'] = 'reveal';
-        updates['revealCorrectIndex'] = q.correctIndex;
-        gameRef.update(updates);
-      });
-    });
+    triggerReveal();
   });
 
   nextBtn.addEventListener('click', () => {
-    gameRef.child('currentQuestion').get().then(snap => {
-      const idx = snap.val();
-      const nextIdx = idx + 1;
-      if (nextIdx < QUESTIONS.length) {
-        gameRef.update({ status: 'question', currentQuestion: nextIdx, revealCorrectIndex: null });
-      } else {
-        gameRef.update({ status: 'finished' });
-      }
-    });
+    const nextIdx = currentIdx + 1;
+    if (nextIdx < QUESTIONS.length) {
+      startQuestion(nextIdx);
+    } else {
+      gameRef.update({ status: 'finished' });
+    }
   });
 })();

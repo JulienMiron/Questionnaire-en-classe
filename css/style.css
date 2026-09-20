@@ -178,9 +178,44 @@ input[type=text]:focus { outline: none; border-color: var(--yellow); }
 .team-score { font-family: var(--font-display); font-weight: 700; color: var(--yellow); }
 .rank { color: var(--chalk-dim); width: 1.6rem; text-align: right; font-family: var(--font-display); }
 
+.timer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+.timer-seconds {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--yellow);
+}
+.timer-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(245,243,231,0.1);
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+.timer-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--yellow);
+  transition: width 0.2s linear, background-color 0.4s ease;
+  transform-origin: left;
+}
+.timer-fill.is-low { background: var(--coral); }
+
 .question-text {
   font-size: clamp(1.3rem, 3.5vw, 1.8rem);
   margin-bottom: 1.4rem;
+  overflow-x: auto;
+}
+.choice-btn {
+  overflow-x: auto;
+}
+.katex-display {
+  margin: 0.3em 0;
 }
 .choices-grid {
   display: grid;
