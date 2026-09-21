@@ -100,9 +100,7 @@ input[type=text]:focus { outline: none; border-color: var(--yellow); }
   display: grid;
   gap: 1rem;
   margin-top: 3rem;
-}
-@media (min-width: 560px) {
-  .landing-choices { grid-template-columns: 1fr 1fr; }
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 .choice-card {
   display: flex;
@@ -119,6 +117,7 @@ input[type=text]:focus { outline: none; border-color: var(--yellow); }
 .choice-mark { font-size: 1.3rem; }
 .choice-host .choice-mark { color: var(--yellow); }
 .choice-team .choice-mark { color: var(--teal); }
+.choice-preview .choice-mark { color: var(--violet); }
 .choice-label { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; }
 .choice-hint { color: var(--chalk-dim); font-size: 0.9rem; }
 

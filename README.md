@@ -100,6 +100,24 @@ c'est écrit dans une chaîne JavaScript, double chaque backslash du LaTeX :
 text: "$$F(x) = \\int_{-\\infty}^{x} f(t)\\,dt$$"
 ```
 
+## Consulter les questions sans créer de partie
+
+Le bouton **Consulter les questions** sur la page d'accueil ouvre `preview.html` :
+une navigation Précédente/Suivante à travers toutes les questions, avec un
+bouton pour afficher la bonne réponse. Utile pour relire ou répéter le
+questionnaire seul, sans passer par Firebase ni créer de code de partie.
+
+## Reconnexion d'une équipe
+
+Si une équipe ferme accidentellement sa fenêtre (ou change d'appareil), elle
+peut rejoindre à nouveau avec le code de la partie en tapant **exactement le
+même nom d'équipe** — elle reprend alors son score et sa progression
+(question en cours, réponse déjà envoyée le cas échéant), même si la partie
+est déjà commencée. Un nom différent, une fois la partie commencée, n'est
+plus accepté. Évite donc que deux équipes choisissent le même nom : la
+reconnexion se fait sur la base du nom exact, et un doublon rendrait la
+reprise ambiguë.
+
 ## Chrono et pointage selon la rapidité
 
 Chaque question a une limite de temps (`timeLimit`, en secondes, réglable

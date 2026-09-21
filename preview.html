@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consulter les questions — Questionnaire en classe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="board">
+  <div class="wrap">
+    <div class="top-row">
+      <a class="btn" href="index.html">← Accueil</a>
+      <span class="status-pill" id="preview-progress"></span>
+    </div>
+
+    <div class="panel">
+      <h2 class="question-text" id="preview-question-text"></h2>
+      <div class="choices-grid" id="preview-choices-grid"></div>
+    </div>
+
+    <div style="display:flex; gap:0.8rem; justify-content:center; flex-wrap:wrap; margin-top:1.2rem;">
+      <button class="btn" id="preview-prev-btn">← Précédente</button>
+      <button class="primary" id="preview-reveal-btn">Afficher la réponse</button>
+      <button class="btn" id="preview-next-btn">Suivante →</button>
+    </div>
+
+    <footer class="hint">Cette page sert à relire ou répéter le questionnaire — elle ne crée aucune partie et ne nécessite aucune équipe.</footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="js/katex-config.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/preview.js"></script>
+</body>
+</html>
