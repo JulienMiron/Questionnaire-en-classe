@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jeopardy — Jeux en classe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="board">
+
+  <!-- Écran : configuration des équipes -->
+  <section id="jp-setup" class="wrap">
+    <div class="top-row">
+      <a class="btn" href="index.html">← Choisir un jeu</a>
+    </div>
+    <h1 class="jp-title" id="jp-setup-title">Jeopardy</h1>
+
+    <div class="panel" id="jp-resume-panel" style="display:none;">
+      <p style="margin:0 0 0.9rem;">Une partie est déjà en cours sur cet appareil.</p>
+      <button class="primary" id="jp-resume-btn">Reprendre la partie</button>
+    </div>
+
+    <div class="panel">
+      <h2 class="jp-panel-title">Nouvelle partie</h2>
+      <label class="jp-label" for="jp-team-count">Nombre d'équipes</label>
+      <div class="jp-stepper">
+        <button class="btn" id="jp-team-minus" aria-label="Moins d'équipes">−</button>
+        <span id="jp-team-count" class="jp-stepper-value">4</span>
+        <button class="btn" id="jp-team-plus" aria-label="Plus d'équipes">+</button>
+      </div>
+
+      <label class="jp-label">Noms des équipes</label>
+      <div id="jp-team-names" class="jp-team-names"></div>
+
+      <label class="jp-check">
+        <input type="checkbox" id="jp-penalty">
+        Une mauvaise réponse fait perdre la valeur de la question (règle du vrai Jeopardy)
+      </label>
+
+      <button class="primary" id="jp-start-btn" style="margin-top:1.2rem;">Commencer la partie</button>
+    </div>
+  </section>
+
+  <!-- Écran : tableau de jeu -->
+  <section id="jp-game" class="jp-game" style="display:none;">
+    <div class="jp-topbar">
+      <a class="btn" href="index.html">← Jeux</a>
+      <h1 class="jp-game-title" id="jp-game-title"></h1>
+      <div class="jp-topbar-actions">
+        <button class="btn" id="jp-ranking-btn">Classement</button>
+        <button class="btn" id="jp-new-btn">Nouvelle partie</button>
+      </div>
+    </div>
+
+    <div class="jp-grid" id="jp-grid"></div>
+
+    <ul class="jp-scores" id="jp-scores"></ul>
+  </section>
+
+  <!-- Fenêtre : question -->
+  <div class="jp-overlay" id="jp-question" style="display:none;" role="dialog" aria-modal="true">
+    <div class="jp-question-card">
+      <div class="jp-q-head">
+        <span class="jp-q-meta" id="jp-q-meta"></span>
+        <div class="jp-timer">
+          <span class="jp-timer-seconds" id="jp-timer-seconds">0:00</span>
+          <button class="btn jp-small" id="jp-timer-toggle">Pause</button>
+          <button class="btn jp-small" id="jp-timer-reset">Recommencer</button>
+        </div>
+      </div>
+      <div class="timer-track"><div class="timer-fill" id="jp-timer-fill"></div></div>
+
+      <div class="jp-q-text" id="jp-q-text"></div>
+
+      <button class="primary" id="jp-reveal-btn">Afficher la réponse</button>
+      <div class="jp-answer" id="jp-answer" style="display:none;"></div>
+
+      <h3 class="jp-teams-title">Résultat des équipes</h3>
+      <ul class="jp-result-list" id="jp-result-list"></ul>
+
+      <div class="jp-q-foot">
+        <button class="primary" id="jp-close-btn">Retour au tableau</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fenêtre : classement -->
+  <div class="jp-overlay" id="jp-ranking" style="display:none;" role="dialog" aria-modal="true">
+    <div class="jp-question-card jp-ranking-card">
+      <h2 style="text-align:center; margin-bottom:1.2rem;" id="jp-ranking-title">Classement</h2>
+      <ul class="team-list" id="jp-ranking-list"></ul>
+      <div class="jp-q-foot">
+        <button class="primary" id="jp-ranking-close">Retour au tableau</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="js/katex-config.js"></script>
+  <script src="js/jeopardy-questions.js"></script>
+  <script src="js/jeopardy.js"></script>
+</body>
+</html>

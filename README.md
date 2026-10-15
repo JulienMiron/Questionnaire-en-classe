@@ -1,3 +1,10 @@
+# Jeux en classe
+
+La page d'accueil (`index.html`) propose deux jeux :
+
+- **Questionnaire en classe** (`questionnaire.html`) — décrit ci-dessous ;
+- **Jeopardy** (`jeopardy.html`) — voir la section [Jeopardy](#jeopardy) à la fin.
+
 # Questionnaire en classe
 
 Un jeu-questionnaire par équipes : chaque équipe joue sur son propre appareil
@@ -5,7 +12,8 @@ Un jeu-questionnaire par équipes : chaque équipe joue sur son propre appareil
 affiche les questions, le déroulement et le pointage de toutes les équipes en
 temps réel.
 
-- `index.html` — page d'accueil (choisir Animateur ou Équipe)
+- `index.html` — choix du jeu
+- `questionnaire.html` — accueil du questionnaire (choisir Animateur ou Équipe)
 - `host.html` — écran de l'animateur (à projeter)
 - `play.html` — écran d'une équipe (sur son propre appareil)
 - `js/questions.js` — **la banque de questions à modifier**
@@ -134,3 +142,43 @@ répond pas à temps ne reçoit aucun point pour cette question.
 - Les règles Firebase en mode test expirent après 30 jours ; il suffit d'y
   retourner et de les remettre (voir Étape 1.4) si tu réutilises le projet
   plus tard.
+
+# Jeopardy
+
+Un tableau de Jeopardy à projeter en classe. Tout se passe sur l'écran de
+l'animateur : **pas de connexion, pas de code de partie, pas de Firebase**.
+
+- `jeopardy.html` / `js/jeopardy.js` — le jeu
+- `js/jeopardy-questions.js` — **la banque de questions à modifier**
+  (actuellement : révision de l'examen 1 A26 de STT-2902, en quatre
+  catégories : échantillonnage, statistiques descriptives, estimation
+  ponctuelle, intervalles de confiance)
+
+## Déroulement
+
+1. Sur la page d'accueil, choisis **Jeopardy**, indique le nombre d'équipes
+   (2 à 8) et, si tu veux, leurs noms.
+2. Coche **Une mauvaise réponse fait perdre la valeur de la question** si tu
+   veux la règle du vrai Jeopardy ; sinon, une mauvaise réponse vaut 0.
+3. Clique une case : la question s'affiche et son minuteur démarre. Le temps
+   alloué (`time`, en secondes) dépend de la difficulté et du nombre de
+   calculs ; il **n'a aucun effet sur les points**. Un signal sonore retentit
+   quand il est écoulé. Barre d'espace : pause/reprise.
+4. **Afficher la réponse**, puis clique **✓ Réussi** ou **✗ Raté** pour
+   chaque équipe concernée (un second clic annule). Plusieurs équipes
+   peuvent réussir la même question.
+5. **Retour au tableau** (ou Échap) : la case devient grise, avec une pastille
+   de la couleur de chaque équipe qui l'a réussie. On peut la rouvrir pour
+   corriger un résultat.
+
+Les boutons **−100 / +100** sous chaque équipe permettent un ajustement
+manuel, et **Classement** affiche le classement en tout temps. La partie est
+enregistrée dans le navigateur : un rafraîchissement accidentel ne fait rien
+perdre (**Nouvelle partie** remet tout à zéro).
+
+## Modifier les questions
+
+Dans `js/jeopardy-questions.js`, chaque catégorie a un nom et une liste de
+questions avec `value`, `time`, `text` et `answer`. Le texte et la réponse
+acceptent du LaTeX (`$...$`, `$$...$$`, backslashs doublés) et un peu de HTML
+(`<strong>`, `<br>`, `<small>`).
