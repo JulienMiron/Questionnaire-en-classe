@@ -42,6 +42,12 @@ const JEOPARDY = {
           time: 60,
           text: "Une enquête montre que les étudiants qui fréquentent la bibliothèque au moins trois fois par semaine ont une moyenne cumulative plus élevée que les autres. L'Université conclut que fréquenter la bibliothèque <em>cause</em> de meilleurs résultats. Pourquoi cette conclusion n'est-elle pas justifiée ? Donnez un exemple.",
           answer: "C'est une <strong>étude observationnelle</strong> : les étudiants n'ont pas été assignés aléatoirement à fréquenter ou non la bibliothèque. Une <strong>variable confondante</strong> peut expliquer l'écart (ex. la motivation ou le nombre d'heures d'étude, qui augmentent à la fois la fréquentation et les notes). On montre une association, pas une causalité."
+        },
+        {
+          value: 600,
+          time: 120,
+          text: "La liste des $2\\,400$ résidents (une chambre chacun) est ordonnée par pavillon, étage, puis numéro de chambre. Chaque corridor compte exactement $10$ chambres et la 10<sup>e</sup> est toujours collée à la cage d'escalier (bruyante). On sélectionne $n = 240$ résidents par échantillonnage systématique pour estimer leurs heures de sommeil. Quelle proportion de chambres bruyantes l'échantillon contiendra-t-il, comparativement à la population ? Qu'en concluez-vous et que proposez-vous ?",
+          answer: "$k = 2\\,400/240 = 10$, soit exactement la période de la liste. Si $r = 10$, les $240$ résidents sont tous dans une chambre bruyante ($100\\,\\%$) ; sinon, aucun ne l'est ($0\\,\\%$). Or la population en compte $10\\,\\%$. L'échantillon n'est donc jamais représentatif : c'est un <strong>biais dû à la périodicité</strong> de la liste, qui coïncide avec le pas.<br>Solutions : mélanger aléatoirement la liste avant le tirage, faire un EAS, ou stratifier selon la position de la chambre dans le corridor."
         }
       ]
     },
@@ -77,6 +83,12 @@ const JEOPARDY = {
           time: 75,
           text: "Diagramme en boîte du loyer mensuel (en dollars) des 3½ près du campus : $Q_1 = 850$, médiane $= 950$, $Q_3 = 1\\,050$. Un appartement est affiché à $1\\,400$ dollars. Calculez l'écart interquartile et déterminez si ce loyer est une valeur aberrante selon la règle de $1{,}5 \\times EI$.",
           answer: "$EI = 1\\,050 - 850 = 200$. Limite supérieure : $Q_3 + 1{,}5 \\times EI = 1\\,050 + 300 = 1\\,350$. Comme $1\\,400 > 1\\,350$, c'est une <strong>valeur aberrante</strong>."
+        },
+        {
+          value: 600,
+          time: 150,
+          text: "Heures de sport par semaine de 8 étudiants : $$3 \\quad 3 \\quad 4 \\quad 5 \\quad 6 \\quad 8 \\quad 9 \\quad 10$$ avec $\\sum x_i = 48$ et $\\sum x_i^2 = 340$. Un 9<sup>e</sup> étudiant, athlète de compétition, déclare $24$ h. Calculez la moyenne, la médiane et l'écart-type <em>avant</em> et <em>après</em> l'ajout. Lesquelles de ces mesures sont robustes ?",
+          answer: "Avant : $\\bar{x} = 6$, médiane $= (5+6)/2 = 5{,}5$, $s^2 = \\dfrac{340 - 8(6)^2}{7} = \\dfrac{52}{7}$, donc $s \\approx 2{,}73$ h.<br>Après : $\\sum x_i = 72$ et $\\sum x_i^2 = 340 + 24^2 = 916$, donc $\\bar{x} = 8$, médiane $= 6$ (5<sup>e</sup> valeur) et $$s^2 = \\frac{916 - 9(8)^2}{8} = \\frac{340}{8} = 42{,}5, \\quad s \\approx 6{,}52 \\text{ h}.$$ Seule la <strong>médiane</strong> est robuste : la moyenne augmente de $2$ h et l'écart-type fait plus que doubler."
         }
       ]
     },
@@ -112,6 +124,12 @@ const JEOPARDY = {
           time: 90,
           text: "Sachant que $E(S^2) = \\sigma^2$ où $S^2 = \\frac{1}{n-1}\\sum (X_i - \\bar{X})^2$, calculez le biais de l'estimateur $$\\hat{\\sigma}^2 = \\frac{1}{n}\\sum_{i=1}^n (X_i - \\bar{X})^2.$$",
           answer: "$\\hat{\\sigma}^2 = \\dfrac{n-1}{n} S^2$, donc $E(\\hat{\\sigma}^2) = \\dfrac{n-1}{n}\\sigma^2$ et le biais vaut $-\\dfrac{\\sigma^2}{n}$ (il sous-estime $\\sigma^2$, mais le biais tend vers $0$)."
+        },
+        {
+          value: 600,
+          time: 150,
+          text: "$X_1, \\ldots, X_n$ est un échantillon aléatoire d'espérance $\\mu$ et de variance $\\sigma^2$. On pose $$T = \\frac{1}{n+1}\\sum_{i=1}^n X_i = \\frac{n}{n+1}\\,\\bar{X}.$$ Calculez le biais et l'EQM de $T$. Si $n = 4$ et $\\mu = \\sigma$, lequel de $T$ ou de $\\bar{X}$ préfère-t-on ?<br><small>$EQM(\\hat{\\theta}) = V(\\hat{\\theta}) + [\\text{biais}(\\hat{\\theta})]^2$</small>",
+          answer: "$E(T) = \\dfrac{n\\mu}{n+1}$, donc biais $= -\\dfrac{\\mu}{n+1}$. $V(T) = \\dfrac{n^2}{(n+1)^2}\\cdot\\dfrac{\\sigma^2}{n} = \\dfrac{n\\sigma^2}{(n+1)^2}$, d'où $$EQM(T) = \\frac{n\\sigma^2 + \\mu^2}{(n+1)^2}.$$ Avec $n = 4$ et $\\mu = \\sigma$ : $EQM(T) = \\dfrac{5\\sigma^2}{25} = \\dfrac{\\sigma^2}{5}$ et $EQM(\\bar{X}) = \\dfrac{\\sigma^2}{4}$. L'efficacité relative de $T$ par rapport à $\\bar{X}$ vaut $\\dfrac{4}{5} < 1$ : on préfère $T$, même s'il est <strong>biaisé</strong>."
         }
       ]
     },
@@ -147,6 +165,12 @@ const JEOPARDY = {
           time: 150,
           text: "La masse (g) de $n = 20$ sacs de café, supposée de loi normale, a un écart-type échantillonnal $s = 4{,}2$ g. Construisez un IC de niveau $95\\,\\%$ pour $\\sigma^2$.<br><small>$\\chi^2_{0{,}025;19} = 32{,}85$ ; $\\chi^2_{0{,}975;19} = 8{,}91$</small>",
           answer: "$$\\left[\\frac{(n-1)s^2}{\\chi^2_{0{,}025;19}}\\,;\\ \\frac{(n-1)s^2}{\\chi^2_{0{,}975;19}}\\right] = \\left[\\frac{335{,}16}{32{,}85}\\,;\\ \\frac{335{,}16}{8{,}91}\\right] = [10{,}203\\,;\\ 37{,}616]$$"
+        },
+        {
+          value: 600,
+          time: 240,
+          text: "Le temps (en minutes) entre deux passages d'autobus suit une loi exponentielle d'espérance $\\theta$. Pour un échantillon aléatoire $X_1, \\ldots, X_n$, on sait que $$W = \\frac{2\\sum_{i=1}^n X_i}{\\theta} \\sim \\chi^2_{2n}.$$ Déduisez un IC de niveau $1-\\alpha$ pour $\\theta$, puis calculez-le au niveau $95\\,\\%$ si $n = 10$ et $\\sum x_i = 32$.<br><small>$\\chi^2_{0{,}025;20} = 34{,}17$ ; $\\chi^2_{0{,}975;20} = 9{,}59$</small>",
+          answer: "$$P\\left(\\chi^2_{1-\\alpha/2;2n} \\le \\frac{2\\sum X_i}{\\theta} \\le \\chi^2_{\\alpha/2;2n}\\right) = 1-\\alpha.$$ En isolant $\\theta$ (tout est positif, donc les inégalités s'inversent) : $$\\left[\\frac{2\\sum X_i}{\\chi^2_{\\alpha/2;2n}}\\,;\\ \\frac{2\\sum X_i}{\\chi^2_{1-\\alpha/2;2n}}\\right].$$ Ici : $[64/34{,}17\\,;\\ 64/9{,}59] = [1{,}873\\,;\\ 6{,}674]$ minutes. Le plus grand quantile va dans la borne inférieure."
         }
       ]
     }
