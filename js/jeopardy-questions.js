@@ -34,14 +34,14 @@ const JEOPARDY = {
         {
           value: 400,
           time: 60,
-          text: "On demande : « Sachant que les experts recommandent au moins 8 heures de sommeil par nuit, combien d'heures dormez-vous en moyenne ? » Quel type de biais cette question introduit-elle ? Proposez une meilleure formulation.",
-          answer: "Un <strong>biais de mesure</strong> : la question est orientée (suggestive) et favorise la désirabilité sociale, ce qui pousse à surestimer ses heures de sommeil.<br>Mieux : « En moyenne, combien d'heures dormez-vous par nuit ? »"
+          text: "Un sondage de l'association étudiante demande : « Ne croyez-vous pas que les frais de stationnement sur le campus sont beaucoup trop élevés ? » Quel type de biais cette question introduit-elle ? Proposez une meilleure formulation.",
+          answer: "Un <strong>biais de mesure</strong> : la question est orientée (suggestive) et pousse les répondants à se dire d'accord.<br>Mieux : « Selon vous, les frais de stationnement sur le campus sont-ils trop élevés, adéquats ou trop bas ? »"
         },
         {
           value: 500,
           time: 60,
-          text: "Les résidents du pavillon C dorment en moyenne 1,2 heure de moins que les autres. Le Service conclut qu'habiter au pavillon C <em>cause</em> un manque de sommeil. Pourquoi cette conclusion n'est-elle pas justifiée ? Donnez un exemple.",
-          answer: "C'est une <strong>étude observationnelle</strong> : les résidents n'ont pas été assignés aléatoirement aux pavillons. Une <strong>variable confondante</strong> peut expliquer l'écart (ex. le pavillon C loge surtout un programme très exigeant, ou il est près d'une rue bruyante). On montre une association, pas une causalité."
+          text: "Une enquête montre que les étudiants qui fréquentent la bibliothèque au moins trois fois par semaine ont une moyenne cumulative plus élevée que les autres. L'Université conclut que fréquenter la bibliothèque <em>cause</em> de meilleurs résultats. Pourquoi cette conclusion n'est-elle pas justifiée ? Donnez un exemple.",
+          answer: "C'est une <strong>étude observationnelle</strong> : les étudiants n'ont pas été assignés aléatoirement à fréquenter ou non la bibliothèque. Une <strong>variable confondante</strong> peut expliquer l'écart (ex. la motivation ou le nombre d'heures d'étude, qui augmentent à la fois la fréquentation et les notes). On montre une association, pas une causalité."
         }
       ]
     },
@@ -57,26 +57,26 @@ const JEOPARDY = {
         {
           value: 200,
           time: 60,
-          text: "Heures de sommeil de 10 résidents : $$5{,}5 \\quad 6 \\quad 6 \\quad 6{,}5 \\quad 7 \\quad 7 \\quad 7{,}5 \\quad 8 \\quad 8 \\quad 9$$ avec $\\sum x_i = 70{,}5$. Calculez la moyenne et la médiane.",
-          answer: "$\\bar{x} = 70{,}5/10 = 7{,}05$ h. Médiane $= (7+7)/2 = 7$ h (moyenne des 5<sup>e</sup> et 6<sup>e</sup> valeurs)."
+          text: "Temps de trajet (minutes) entre le domicile et le campus de 10 étudiants : $$12 \\quad 15 \\quad 18 \\quad 20 \\quad 22 \\quad 22 \\quad 25 \\quad 28 \\quad 30 \\quad 38$$ avec $\\sum x_i = 230$. Calculez la moyenne et la médiane.",
+          answer: "$\\bar{x} = 230/10 = 23$ min. Médiane $= (22+22)/2 = 22$ min (moyenne des 5<sup>e</sup> et 6<sup>e</sup> valeurs)."
         },
         {
           value: 300,
           time: 60,
-          text: "Aux 10 observations précédentes ($\\sum x_i = 70{,}5$, $\\bar{x} = 7{,}05$, médiane $7$), on ajoute un 11<sup>e</sup> résident qui dort 2 heures. Que deviennent la moyenne et la médiane ?",
-          answer: "Moyenne : $72{,}5/11 \\approx 6{,}59$ h. Médiane : toujours $7$ h (la 6<sup>e</sup> des 11 valeurs ordonnées). Seule la moyenne est affectée."
+          text: "Nombre de cafés consommés par semaine par 9 étudiants : $$1 \\quad 2 \\quad 3 \\quad 4 \\quad 5 \\quad 5 \\quad 6 \\quad 8 \\quad 11$$ La moyenne et la médiane valent toutes deux $5$. On ajoute un 10<sup>e</sup> étudiant qui en boit $40$. Que deviennent la moyenne et la médiane ?",
+          answer: "Moyenne : $(45 + 40)/10 = 8{,}5$ cafés. Médiane : $(5+5)/2 = 5$ cafés (moyenne des 5<sup>e</sup> et 6<sup>e</sup> valeurs), inchangée. Seule la moyenne est affectée."
         },
         {
           value: 400,
           time: 90,
-          text: "Pour les 10 observations ($n = 10$), on a $\\sum x_i = 70{,}5$ et $\\sum x_i^2 = 507{,}75$. Calculez la variance échantillonnale $s^2$ et l'écart-type $s$.",
-          answer: "$$s^2 = \\frac{\\sum x_i^2 - n\\bar{x}^2}{n-1} = \\frac{507{,}75 - 10(7{,}05)^2}{9} = \\frac{10{,}725}{9} \\approx 1{,}192$$ donc $s \\approx 1{,}092$ h."
+          text: "Nombre d'heures de travail rémunéré par semaine de $n = 8$ étudiants : on a $\\sum x_i = 104$ et $\\sum x_i^2 = 1\\,806$. Calculez la variance échantillonnale $s^2$ et l'écart-type $s$.",
+          answer: "$\\bar{x} = 104/8 = 13$, puis $$s^2 = \\frac{\\sum x_i^2 - n\\bar{x}^2}{n-1} = \\frac{1\\,806 - 8(13)^2}{7} = \\frac{454}{7} \\approx 64{,}86$$ donc $s \\approx 8{,}05$ h."
         },
         {
           value: 500,
           time: 75,
-          text: "Diagramme en boîte du pavillon C : $Q_1 = 5{,}5$, médiane $= 6$, $Q_3 = 6{,}5$. Une résidente déclare dormir 10 heures. Calculez l'écart interquartile et déterminez si 10 h est une valeur aberrante selon la règle de $1{,}5 \\times EI$.",
-          answer: "$EI = 6{,}5 - 5{,}5 = 1$. Limite supérieure : $Q_3 + 1{,}5 \\times EI = 6{,}5 + 1{,}5 = 8$. Comme $10 > 8$, c'est une <strong>valeur aberrante</strong>."
+          text: "Diagramme en boîte du loyer mensuel (en dollars) des 3½ près du campus : $Q_1 = 850$, médiane $= 950$, $Q_3 = 1\\,050$. Un appartement est affiché à $1\\,400$ dollars. Calculez l'écart interquartile et déterminez si ce loyer est une valeur aberrante selon la règle de $1{,}5 \\times EI$.",
+          answer: "$EI = 1\\,050 - 850 = 200$. Limite supérieure : $Q_3 + 1{,}5 \\times EI = 1\\,050 + 300 = 1\\,350$. Comme $1\\,400 > 1\\,350$, c'est une <strong>valeur aberrante</strong>."
         }
       ]
     },
@@ -98,14 +98,14 @@ const JEOPARDY = {
         {
           value: 300,
           time: 60,
-          text: "Avec le même $\\hat{\\mu}_2 = \\dfrac{X_1 + X_n}{2}$ (observations indépendantes de variance $\\sigma^2$), calculez $V(\\hat{\\mu}_2)$.",
-          answer: "Par indépendance, $V(\\hat{\\mu}_2) = \\dfrac{V(X_1) + V(X_n)}{4} = \\dfrac{2\\sigma^2}{4} = \\dfrac{\\sigma^2}{2}$."
+          text: "$X_1, \\ldots, X_n$ est un échantillon aléatoire (observations indépendantes) d'espérance $\\mu$ et de variance $\\sigma^2$. On pose $$\\hat{\\mu} = \\frac{2X_1 + X_2}{3}.$$ Calculez $V(\\hat{\\mu})$.",
+          answer: "Par indépendance, $V(\\hat{\\mu}) = \\dfrac{4V(X_1) + V(X_2)}{9} = \\dfrac{4\\sigma^2 + \\sigma^2}{9} = \\dfrac{5\\sigma^2}{9}$."
         },
         {
           value: 400,
           time: 75,
-          text: "Sachant que $V(\\bar{X}) = \\sigma^2/n$ et $V(\\hat{\\mu}_2) = \\sigma^2/2$ (deux estimateurs sans biais), calculez l'efficacité relative de $\\bar{X}$ par rapport à $\\hat{\\mu}_2$. Lequel préfère-t-on ?",
-          answer: "$$\\frac{EQM(\\bar{X})}{EQM(\\hat{\\mu}_2)} = \\frac{\\sigma^2/n}{\\sigma^2/2} = \\frac{2}{n} \\le 1.$$ On préfère $\\bar{X}$ (strictement dès que $n \\ge 3$ ; pour $n = 2$ ils coïncident)."
+          text: "$X_1, \\ldots, X_n$ ($n \\ge 3$) est un échantillon aléatoire de variance $\\sigma^2$. Les estimateurs sans biais $\\bar{X}$ et $T = \\dfrac{X_1 + X_2 + X_3}{3}$ ont pour variances $V(\\bar{X}) = \\sigma^2/n$ et $V(T) = \\sigma^2/3$. Calculez l'efficacité relative de $\\bar{X}$ par rapport à $T$. Lequel préfère-t-on et dans quelle condition ?",
+          answer: "$$\\frac{EQM(\\bar{X})}{EQM(T)} = \\frac{\\sigma^2/n}{\\sigma^2/3} = \\frac{3}{n} \\le 1.$$ On préfère $\\bar{X}$ dès que $n > 3$ (le rapport est alors $< 1$). Si $n = 3$, $\\bar{X} = T$ : les deux estimateurs sont identiques."
         },
         {
           value: 500,
@@ -121,7 +121,7 @@ const JEOPARDY = {
         {
           value: 100,
           time: 45,
-          text: "$[496{,}6\\,;\\ 499{,}8]$ est un intervalle de confiance de niveau $95\\,\\%$ pour $\\mu$. Peut-on dire que $P(496{,}6 \\le \\mu \\le 499{,}8) = 0{,}95$ ? Pourquoi ?",
+          text: "Une étude rapporte que $[12{,}4\\,;\\ 15{,}8]$ minutes est un intervalle de confiance de niveau $95\\,\\%$ pour le temps d'attente moyen $\\mu$ à la cafétéria. Peut-on dire que $P(12{,}4 \\le \\mu \\le 15{,}8) = 0{,}95$ ? Pourquoi ?",
           answer: "<strong>Non.</strong> Une fois observé, l'intervalle contient $\\mu$ ou ne le contient pas. Le $95\\,\\%$ se rapporte à la méthode : avant d'observer les données, l'intervalle <em>aléatoire</em> $[L\\,;U]$ contient $\\mu$ avec probabilité $0{,}95$."
         },
         {
@@ -139,14 +139,14 @@ const JEOPARDY = {
         {
           value: 400,
           time: 90,
-          text: "On suppose maintenant $\\sigma = 3{,}5$ mL connu. Quelle taille d'échantillon minimale faut-il pour que la marge d'erreur de l'IC de niveau $95\\,\\%$ pour $\\mu$ soit d'au plus 1 mL ?<br><small>$z_{0{,}025} = 1{,}96$</small>",
-          answer: "$$n \\ge \\left(\\frac{z_{0{,}025}\\,\\sigma}{e}\\right)^2 = \\left(\\frac{1{,}96 \\times 3{,}5}{1}\\right)^2 = 47{,}06$$ donc <strong>$n = 48$</strong> bouteilles (on arrondit vers le haut)."
+          text: "Le volume de jus dans des berlingots suit une loi normale d'écart-type connu $\\sigma = 2{,}5$ mL. Quelle taille d'échantillon minimale faut-il pour que la marge d'erreur de l'IC de niveau $95\\,\\%$ pour $\\mu$ soit d'au plus 1 mL ?<br><small>$z_{0{,}025} = 1{,}96$</small>",
+          answer: "$$n \\ge \\left(\\frac{z_{0{,}025}\\,\\sigma}{e}\\right)^2 = \\left(\\frac{1{,}96 \\times 2{,}5}{1}\\right)^2 = 24{,}01$$ donc <strong>$n = 25$</strong> berlingots (on arrondit vers le haut)."
         },
         {
           value: 500,
           time: 150,
-          text: "Avec $n = 20$ et $s = 3{,}5$ mL (loi normale), construisez un IC de niveau $95\\,\\%$ pour $\\sigma^2$.<br><small>$\\chi^2_{0{,}025;19} = 32{,}85$ ; $\\chi^2_{0{,}975;19} = 8{,}91$</small>",
-          answer: "$$\\left[\\frac{(n-1)s^2}{\\chi^2_{0{,}025;19}}\\,;\\ \\frac{(n-1)s^2}{\\chi^2_{0{,}975;19}}\\right] = \\left[\\frac{232{,}75}{32{,}85}\\,;\\ \\frac{232{,}75}{8{,}91}\\right] = [7{,}085\\,;\\ 26{,}122]$$"
+          text: "La masse (g) de $n = 20$ sacs de café, supposée de loi normale, a un écart-type échantillonnal $s = 4{,}2$ g. Construisez un IC de niveau $95\\,\\%$ pour $\\sigma^2$.<br><small>$\\chi^2_{0{,}025;19} = 32{,}85$ ; $\\chi^2_{0{,}975;19} = 8{,}91$</small>",
+          answer: "$$\\left[\\frac{(n-1)s^2}{\\chi^2_{0{,}025;19}}\\,;\\ \\frac{(n-1)s^2}{\\chi^2_{0{,}975;19}}\\right] = \\left[\\frac{335{,}16}{32{,}85}\\,;\\ \\frac{335{,}16}{8{,}91}\\right] = [10{,}203\\,;\\ 37{,}616]$$"
         }
       ]
     }
