@@ -14,27 +14,27 @@
 const CONCEPTS = [
   {
     word: "Puissance d'un test",
-    definition: "La probabilité de rejeter $H_0$ lorsque $H_1$ est vraie.",
+    definition: "La probabilité de rejeter H0 lorsque H1 est vraie.",
     explanation: "C'est $1-\\beta$. Bluffs fréquents : $1-\\alpha$, ou « la probabilité de prendre la bonne décision »."
   },
   {
     word: "Valeur-p",
-    definition: "La probabilité, en supposant $H_0$ vraie, d'obtenir une statistique de test au moins aussi extrême que celle observée, dans la direction de $H_1$.",
-    explanation: "Ce n'est pas la probabilité que $H_0$ soit vraie."
+    definition: "La probabilité, en supposant H0 vraie, d'obtenir une statistique de test au moins aussi extrême que celle observée, dans la direction de H1.",
+    explanation: "Ce n'est pas la probabilité que H0 soit vraie."
   },
   {
     word: "Seuil de signification",
-    definition: "La probabilité de rejeter $H_0$ alors qu'elle est vraie, fixée avant de regarder les données.",
-    explanation: "Noté $\\alpha$. Ce n'est pas « la probabilité de se tromper quand on rejette $H_0$ »."
+    definition: "La probabilité de rejeter H0 alors qu'elle est vraie, fixée avant de regarder les données.",
+    explanation: "Noté $\\alpha$. Ce n'est pas « la probabilité de se tromper quand on rejette H0 »."
   },
   {
     word: "Erreur de type I",
-    definition: "Rejeter $H_0$ alors qu'elle est vraie.",
+    definition: "Rejeter H0 alors qu'elle est vraie.",
     explanation: "Sa probabilité est $\\alpha$."
   },
   {
     word: "Erreur de type II",
-    definition: "Ne pas rejeter $H_0$ alors que $H_1$ est vraie.",
+    definition: "Ne pas rejeter H0 alors que H1 est vraie.",
     explanation: "Sa probabilité est $\\beta$ ; elle dépend de la vraie valeur du paramètre."
   },
   {
@@ -45,21 +45,21 @@ const CONCEPTS = [
   {
     word: "Hypothèse alternative",
     definition: "L'énoncé sur un paramètre de la population que le chercheur souhaite appuyer avec les données.",
-    explanation: "C'est $H_1$ qu'on cherche à démontrer, pas $H_0$."
+    explanation: "C'est H1 qu'on cherche à démontrer, pas H0."
   },
   {
     word: "Statistique de test",
-    definition: "Une fonction des données, dont la loi est connue sous $H_0$, qui mesure l'écart entre l'estimation et la valeur postulée du paramètre.",
+    definition: "Une fonction des données, dont la loi est connue sous H0, qui mesure l'écart entre l'estimation et la valeur postulée du paramètre.",
     explanation: "Par ex. $T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$."
   },
   {
     word: "Région critique",
-    definition: "L'ensemble des valeurs de la statistique de test qui mènent au rejet de $H_0$.",
+    definition: "L'ensemble des valeurs de la statistique de test qui mènent au rejet de H0.",
     explanation: "Aussi appelée région de rejet. À ne pas confondre avec un intervalle de confiance."
   },
   {
     word: "Valeur critique",
-    definition: "La valeur qui sépare la région critique des valeurs de la statistique de test pour lesquelles on ne rejette pas $H_0$.",
+    definition: "La valeur qui sépare la région critique des valeurs de la statistique de test pour lesquelles on ne rejette pas H0.",
     explanation: "Par ex. $t_{0{,}05;\\,24} = 1{,}711$ pour un test unilatéral à droite."
   },
   {
@@ -69,21 +69,21 @@ const CONCEPTS = [
   },
   {
     word: "Résultat statistiquement significatif",
-    definition: "Un résultat qui mène au rejet de $H_0$ au seuil de signification fixé.",
+    definition: "Un résultat qui mène au rejet de H0 au seuil de signification fixé.",
     explanation: "Significatif ne veut pas dire important en pratique."
   },
   {
     word: "Test bilatéral",
     definition: "Un test dont l'hypothèse alternative couvre les deux côtés de la valeur postulée du paramètre.",
-    explanation: "Par ex. $H_1 : \\mu \\neq \\mu_0$. Bluff classique : « un test qui compare deux échantillons »."
+    explanation: "Par ex. H1 : $\\mu \\neq \\mu_0$. Bluff classique : « un test qui compare deux échantillons »."
   },
   {
     word: "Règle de décision",
-    definition: "La règle, fixée avant de voir les données, qui indique pour quelles valeurs de la statistique de test on rejette $H_0$.",
-    explanation: "Par ex. « rejeter $H_0$ si $t_{\\text{obs}} > t_{\\alpha;\\,n-1}$ », ou de façon équivalente « si la valeur-p est inférieure à $\\alpha$ »."
+    definition: "La règle, fixée avant de voir les données, qui indique pour quelles valeurs de la statistique de test on rejette H0.",
+    explanation: "Par ex. « rejeter H0 si $t_{\\text{obs}} > t_{\\alpha;\\,n-1}$ », ou de façon équivalente « si la valeur-p est inférieure à $\\alpha$ »."
   },
   {
-    word: "Loi de la statistique de test sous $H_0$",
+    word: "Loi de la statistique de test sous H0",
     definition: "La loi que suit la statistique de test lorsqu'on suppose que l'hypothèse nulle est vraie.",
     explanation: "C'est elle qui sert à calculer la valeur-p et les valeurs critiques (par ex. une Student à $n-1$ degrés de liberté)."
   },
@@ -93,18 +93,18 @@ const CONCEPTS = [
     explanation: "Notée par ex. $t_{\\text{obs}}$ ; on la compare à la valeur critique ou on s'en sert pour calculer la valeur-p."
   },
   {
-    word: "Ne pas rejeter $H_0$",
+    word: "Ne pas rejeter H0",
     definition: "Conclure que les données ne fournissent pas suffisamment de preuves contre l'hypothèse nulle.",
-    explanation: "Ce n'est pas « accepter $H_0$ » ni « prouver que $H_0$ est vraie »."
+    explanation: "Ce n'est pas « accepter H0 » ni « prouver que H0 est vraie »."
   },
   {
     word: "Fonction de puissance",
-    definition: "La fonction qui donne, pour chaque valeur possible du paramètre, la probabilité de rejeter $H_0$.",
-    explanation: "Sous $H_0$, elle vaut $\\alpha$ ; elle augmente à mesure que le paramètre s'éloigne de la valeur postulée et que $n$ augmente."
+    definition: "La fonction qui donne, pour chaque valeur possible du paramètre, la probabilité de rejeter H0.",
+    explanation: "Sous H0, elle vaut $\\alpha$ ; elle augmente à mesure que le paramètre s'éloigne de la valeur postulée et que $n$ augmente."
   },
   {
-    word: "Test $t$ pour une moyenne",
-    definition: "Un test sur la moyenne d'une population normale dont la variance est inconnue, basé sur une loi de Student à $n-1$ degrés de liberté.",
-    explanation: "$T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$ suit une $t_{n-1}$ sous $H_0$."
+    word: "Test t pour une moyenne",
+    definition: "Un test sur la moyenne d'une population normale dont la variance est inconnue, basé sur une loi de Student à n − 1 degrés de liberté.",
+    explanation: "$T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$ suit une $t_{n-1}$ sous H0."
   }
 ];
