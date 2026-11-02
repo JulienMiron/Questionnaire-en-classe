@@ -50,27 +50,23 @@
     if (!playerOrder.includes(id)) playerOrder.push(id);
     return 'team-color-' + (playerOrder.indexOf(id) % 8);
   }
-  function usedConcepts() {
-    return Object.values((game && game.rounds) || {}).map(r => r.conceptIndex);
-  }
-  function nextConceptIndex() {
-    const used = usedConcepts();
-    for (let i = 0; i < CONCEPTS.length; i++) if (!used.includes(i)) return i;
-    return -1;
+  // Le plan de la partie est fixé au départ : une manche par joueur, chaque
+  // joueur détient la vraie définition exactement une fois.
+  function plan() { return (game && game.plan) || { holders: [], concepts: [] }; }
+  function totalRounds() { return plan().holders.length; }
+  // Concept de remplacement (pour « Changer de concept ») : un concept qui ne
+  // figure pas déjà dans le plan.
+  function spareConceptIndex() {
+    const inPlan = plan().concepts;
+    const spare = [];
+    for (let i = 0; i < CONCEPTS.length; i++) if (!inPlan.includes(i)) spare.push(i);
+    return spare.length ? spare[Math.floor(Math.random() * spare.length)] : -1;
   }
 
   // ---------- Création / reprise ----------
-  function makeRoomCode() { return String(Math.floor(1000 + Math.random() * 9000)); }
-
   $('create-game-btn').addEventListener('click', () => {
-    const code = makeRoomCode();
-    const ref = db.ref('games/' + code);
-    ref.set({
-      type: 'dictionnaire',
-      status: 'lobby',
-      round: -1,
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => openGame(code))
+    createRoom('dictionnaire', { status: 'lobby', round: -1 })
+      .then(code => openGame(code))
       .catch(err => { $('setup-error').textContent = 'Impossible de créer la partie : ' + err.message; });
   });
 
@@ -102,26 +98,33 @@
   }
 
   // ---------- Transitions ----------
-  function pickHolder() {
-    const ps = players();
-    const ids = Object.keys(ps);
-    const minCount = Math.min(...ids.map(id => ps[id].holderCount || 0));
-    const candidates = ids.filter(id => (ps[id].holderCount || 0) === minCount);
-    return candidates[Math.floor(Math.random() * candidates.length)];
+  // Au départ : autant de manches que de joueurs (au plus le nombre de
+  // concepts), un ordre aléatoire des détenteurs et des concepts tirés au
+  // hasard dans la banque.
+  function startGame() {
+    const ids = shuffle(Object.keys(players()));
+    const n = Math.min(ids.length, CONCEPTS.length);
+    const concepts = shuffle(CONCEPTS.map((_, i) => i)).slice(0, n);
+    return gameRef.update({ plan: { holders: ids.slice(0, n), concepts } })
+      .then(() => { game.plan = { holders: ids.slice(0, n), concepts }; return startRound(0); });
   }
 
-  function startRound(roundIdx, conceptIndex) {
-    const holder = pickHolder();
+  function roundData(roundIdx, conceptIndex, holder) {
     const concept = CONCEPTS[conceptIndex];
-    const updates = {};
-    updates['rounds/' + roundIdx] = {
+    return {
       conceptIndex,
       word: concept.word,
       holder,
       entries: { [holder]: concept.definition },
       deadline: S.writingTime > 0 ? now() + S.writingTime * 1000 : null
     };
-    updates['players/' + holder + '/holderCount'] = (players()[holder].holderCount || 0) + 1;
+  }
+
+  function startRound(roundIdx) {
+    const holder = plan().holders[roundIdx];
+    const conceptIndex = plan().concepts[roundIdx];
+    const updates = {};
+    updates['rounds/' + roundIdx] = roundData(roundIdx, conceptIndex, holder);
     updates['round'] = roundIdx;
     updates['status'] = 'writing';
     return gameRef.update(updates);
@@ -171,18 +174,15 @@
   }
 
   function skipConcept() {
-    // On remplace le concept de la manche en cours par le suivant, sans
-    // compter cette manche comme une « détention » pour le joueur choisi.
+    // Remplace le concept de la manche en cours par un concept inutilisé. Le
+    // détenteur reste le même : chacun garde exactement une manche.
     const r = game.round;
-    const round = currentRound();
-    const next = nextConceptIndex();
-    if (next < 0) { alertNote('Il ne reste plus de concept dans la banque.'); return Promise.resolve(); }
-    const holder = round.holder;
-    const ps = players();
+    const next = spareConceptIndex();
+    if (next < 0) { alertNote('Il ne reste plus de concept de rechange dans la banque.'); return Promise.resolve(); }
     const updates = {};
-    if (ps[holder]) updates['players/' + holder + '/holderCount'] = Math.max(0, (ps[holder].holderCount || 1) - 1);
-    updates['rounds/' + r + '/skipped'] = true;
-    return gameRef.update(updates).then(() => startRound(r + 1, next));
+    updates['plan/concepts/' + r] = next;
+    updates['rounds/' + r] = roundData(r, next, currentRound().holder);
+    return gameRef.update(updates);
   }
 
   function alertNote(msg) { $('status-pill').textContent = msg; }
@@ -195,17 +195,13 @@
     };
   }
 
-  $('start-btn').addEventListener('click', guarded(() => {
-    const next = nextConceptIndex();
-    return startRound(0, next);
-  }));
+  $('start-btn').addEventListener('click', guarded(() => game.status === 'lobby' && startGame()));
   $('to-vote-btn').addEventListener('click', guarded(() => game.status === 'writing' && goToVoting()));
   $('skip-btn').addEventListener('click', guarded(() => game.status === 'writing' && skipConcept()));
   $('reveal-btn').addEventListener('click', guarded(() => game.status === 'voting' && reveal()));
   $('next-btn').addEventListener('click', guarded(() => {
-    const next = nextConceptIndex();
-    if (next < 0) return gameRef.update({ status: 'finished' });
-    return startRound(game.round + 1, next);
+    if (game.round + 1 >= totalRounds()) return gameRef.update({ status: 'finished' });
+    return startRound(game.round + 1);
   }));
   $('end-btn').addEventListener('click', guarded(() => gameRef.update({ status: 'finished' })));
 
@@ -306,17 +302,26 @@
         ul.appendChild(li);
       });
       $('start-btn').disabled = nPlayers < 2 || CONCEPTS.length === 0;
+      const info = $('lobby-rounds');
+      if (nPlayers < 2) info.textContent = '';
+      else if (nPlayers <= CONCEPTS.length) {
+        info.textContent = `${nPlayers} joueurs : ${nPlayers} manches, ${nPlayers} concepts tirés au hasard parmi ${CONCEPTS.length}. Chaque joueur recevra la vraie définition exactement une fois.`;
+        info.classList.remove('is-warning');
+      } else {
+        info.textContent = `${nPlayers} joueurs, mais seulement ${CONCEPTS.length} concepts dans la banque : ${nPlayers - CONCEPTS.length} joueur(s) ne recevront jamais la vraie définition. Ajoute des concepts dans js/concepts.js.`;
+        info.classList.add('is-warning');
+      }
       return;
     }
 
     const round = currentRound();
     if (!round) return;
     const r = game.round;
-    const key = status + ':' + r;
+    const key = status + ':' + r + ':' + round.conceptIndex;
     const fresh = key !== renderedKey;
     renderedKey = key;
 
-    $('round-progress').textContent = `Manche ${r + 1 - countSkippedBefore(r)} · concept ${usedConcepts().length} / ${CONCEPTS.length}`;
+    $('round-progress').textContent = `Manche ${r + 1} / ${totalRounds()}`;
     if (fresh) {
       $('round-word').textContent = round.word;
       renderMathIn($('round-word'));
@@ -333,7 +338,7 @@
       $('written-count').textContent = written;
       $('written-total').textContent = others.length;
       $('to-vote-btn').classList.toggle('is-ready', others.length > 0 && written >= others.length);
-      $('skip-btn').disabled = nextConceptIndex() < 0;
+      $('skip-btn').disabled = spareConceptIndex() < 0;
     }
 
     if (status === 'voting') {
@@ -394,14 +399,9 @@
         renderMathIn(ex);
       } else ex.style.display = 'none';
 
-      $('next-btn').textContent = nextConceptIndex() < 0 ? 'Voir les résultats finaux' : 'Manche suivante';
+      $('next-btn').textContent = game.round + 1 >= totalRounds() ? 'Voir les résultats finaux' : 'Manche suivante';
     }
     tick();
   }
 
-  function countSkippedBefore(r) {
-    let n = 0;
-    for (let i = 0; i < r; i++) if (game.rounds && game.rounds[i] && game.rounds[i].skipped) n++;
-    return n;
-  }
 })();

@@ -482,3 +482,8 @@ footer.hint {
 .dico-verdict { display: grid; gap: 0.4rem; text-align: center; font-size: 1.05rem; }
 .dico-round-gain { font-family: var(--font-display); font-size: 1.5rem; color: var(--yellow); margin-top: 0.4rem; }
 .team-list li.is-me { outline: 1.5px solid var(--yellow); }
+.dico-rounds-info { font-weight: 600; margin: 0.8rem 0 0; }
+.dico-rounds-info.is-warning { color: var(--coral); }
+.choice-join { margin-top: 2.5rem; border-style: solid; border-color: var(--yellow); }
+.choice-join .choice-mark { color: var(--yellow); }
+.choice-join + .landing-choices { margin-top: 1rem; }
