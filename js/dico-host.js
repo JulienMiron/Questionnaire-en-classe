@@ -137,13 +137,21 @@
     const ids = shuffle(Object.keys(entries).filter(id => (entries[id] || '').trim() !== ''));
     const ownIndex = {};
     ids.forEach((id, i) => { ownIndex[id] = i; });
-    const updates = {};
-    updates['rounds/' + r + '/options'] = ids.map(id => entries[id].trim());
-    updates['rounds/' + r + '/owners'] = ids;
-    updates['rounds/' + r + '/ownIndex'] = ownIndex;
-    updates['rounds/' + r + '/deadline'] = S.votingTime > 0 ? now() + S.votingTime * 1000 : null;
-    updates['status'] = 'voting';
-    return gameRef.update(updates);
+    alertNote('Correction des définitions…');
+    // Toutes les définitions (y compris la vraie) passent par la même
+    // correction, pour qu'aucune ne se distingue par ses fautes.
+    return correctDefinitions(ids.map(id => entries[id])).then(result => {
+      if (game.status !== 'writing' || game.round !== r) return; // déjà avancé ailleurs
+      const updates = {};
+      updates['rounds/' + r + '/options'] = result.texts;
+      updates['rounds/' + r + '/owners'] = ids;
+      updates['rounds/' + r + '/ownIndex'] = ownIndex;
+      updates['rounds/' + r + '/corrections'] = result.changes;
+      updates['rounds/' + r + '/correctionError'] = result.error;
+      updates['rounds/' + r + '/deadline'] = S.votingTime > 0 ? now() + S.votingTime * 1000 : null;
+      updates['status'] = 'voting';
+      return gameRef.update(updates);
+    });
   }
 
   function reveal() {
@@ -354,6 +362,9 @@
         renderMathIn(ol);
       }
       $('voted-count').textContent = Object.keys(round.votes || {}).length;
+      $('correction-note').textContent = round.correctionError
+        ? 'Correcteur indisponible (' + round.correctionError + ') : mise en forme seulement.'
+        : (round.corrections ? round.corrections + ' faute(s) corrigée(s) automatiquement.' : 'Aucune faute détectée.');
       $('voted-total').textContent = others.length;
     }
 

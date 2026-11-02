@@ -217,6 +217,23 @@ tableau, et chacun vote pour celle qu'il croit vraie.
    concept en cours par un autre concept inutilisé de la banque. Le détenteur
    reste le même.
 
+## Correction automatique des fautes
+
+Pour qu'on ne reconnaisse pas les fausses définitions à leurs fautes :
+
+- pendant l'écriture, l'encadré active le correcteur du navigateur (les
+  fautes sont soulignées en direct) ;
+- au passage au vote, **toutes** les définitions, y compris la vraie, sont
+  corrigées de la même façon : espaces, majuscule initiale, point final, puis
+  orthographe et grammaire avec le service gratuit LanguageTool (une seule
+  requête par manche). Le LaTeX entre `$...$` et le vocabulaire de la banque
+  de concepts ne sont jamais modifiés ;
+- l'écran de l'animateur indique combien de fautes ont été corrigées. Si
+  LanguageTool ne répond pas, le jeu continue avec la mise en forme seulement.
+
+Les réglages (désactiver la correction, mots à protéger) sont au début de
+`js/dico-correct.js`.
+
 ## Pointage
 
 Le pointage se règle dans `js/dico-settings.js` :
