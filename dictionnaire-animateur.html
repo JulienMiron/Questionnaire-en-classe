@@ -54,7 +54,7 @@
 
         <!-- Écriture -->
         <div id="writing-block">
-          <p class="dico-instructions">Écrivez une fausse définition crédible sur votre appareil. Un joueur choisi au hasard a reçu la vraie.</p>
+          <p class="dico-instructions">Écrivez une fausse définition crédible sur votre appareil. Un joueur choisi au hasard a reçu la vraie et doit la réécrire dans ses mots.</p>
           <p class="dico-counter"><span id="written-count">0</span> / <span id="written-total">0</span> définitions reçues</p>
           <div class="dico-actions">
             <button class="primary" id="to-vote-btn">Passer au vote</button>
@@ -67,6 +67,7 @@
           <p class="dico-instructions">Votez sur votre appareil pour la définition que vous croyez vraie.</p>
           <ol class="dico-options" id="voting-options"></ol>
           <p class="dico-counter"><span id="voted-count">0</span> / <span id="voted-total">0</span> votes reçus</p>
+          <p class="dico-note" id="correction-note"></p>
           <div class="dico-actions">
             <button class="primary" id="reveal-btn">Révéler la vraie définition</button>
           </div>
@@ -84,14 +85,18 @@
       </div>
 
       <div class="panel">
-        <h2 class="dico-panel-title">Pointage</h2>
+        <div class="dico-board-head">
+          <h2 class="dico-panel-title" id="scoreboard-title">Top 5</h2>
+          <button class="btn jp-small" id="toggle-ranking-btn">Afficher le classement complet</button>
+        </div>
         <ul class="team-list" id="scoreboard"></ul>
       </div>
     </section>
 
     <!-- Fin -->
     <section id="finished-screen" style="display:none;">
-      <h1 style="text-align:center; margin-bottom:1.5rem;">Résultats finaux</h1>
+      <h1 style="text-align:center; margin-bottom:1rem;" id="final-title">Résultats finaux : top 5</h1>
+      <p style="text-align:center; margin:0 0 1.5rem;"><button class="btn jp-small" id="toggle-final-btn">Afficher le classement complet</button></p>
       <ul class="team-list" id="final-scoreboard"></ul>
       <p style="text-align:center; margin-top:2rem;">
         <a class="btn" href="dictionnaire-animateur.html?nouvelle=1">Nouvelle partie</a>
@@ -110,6 +115,7 @@
   <script src="js/room-code.js"></script>
   <script src="js/dico-settings.js"></script>
   <script src="js/concepts.js"></script>
+  <script src="js/dico-correct.js"></script>
   <script src="js/dico-host.js"></script>
 </body>
 </html>

@@ -47,13 +47,14 @@
         <p class="room-code-label">Le mot</p>
         <h2 class="dico-word" id="w-word"></h2>
         <p class="dico-role" id="w-role"></p>
-        <textarea id="w-text" class="dico-textarea" rows="5"></textarea>
-        <div class="dico-preview" id="w-preview" style="display:none;"></div>
+        <p class="room-code-label" id="w-original-label" style="display:none;">La vraie définition (ne sera pas montrée telle quelle)</p>
+        <div class="dico-preview" id="w-preview" style="display:none; margin-bottom:1rem;"></div>
+        <textarea id="w-text" class="dico-textarea" rows="5" spellcheck="true" lang="fr" autocapitalize="sentences"></textarea>
         <div class="dico-actions">
           <button class="primary" id="w-send">Envoyer ma définition</button>
           <span class="dico-sent" id="w-sent"></span>
         </div>
-        <p class="dico-note" id="w-help">Une ou deux phrases, dans le style d'une vraie définition. Tu peux écrire du LaTeX entre $…$. Tu peux modifier ta définition jusqu'au début du vote.</p>
+        <p class="dico-note" id="w-help">Une ou deux phrases, dans le style d'une vraie définition. Tu peux écrire du LaTeX entre $…$. Tu peux modifier ta définition jusqu'au début du vote. Les fautes seront corrigées automatiquement avant le vote, pour toutes les définitions.</p>
       </div>
 
       <!-- Vote -->

@@ -196,8 +196,10 @@ tableau, et chacun vote pour celle qu'il croit vraie.
    début, on ne peut plus s'inscrire (seulement reprendre sa place). S'il y a
    plus de joueurs que de concepts, l'écran d'attente t'avertit.
    - À chaque manche, le concept s'affiche sur tous les écrans. Le joueur
-     dont c'est le tour voit la vraie définition dans un encadré non
-     modifiable.
+     dont c'est le tour voit la vraie définition et doit la **réécrire dans
+     ses mots**, sans en changer le sens. Une réécriture identique à
+     l'originale est refusée. S'il n'envoie rien, l'originale est utilisée
+     telle quelle et il ne marque pas de points.
    - Les autres écrivent leur fausse définition dans l'encadré, puis cliquent
      **Envoyer**. Ils peuvent la modifier jusqu'au début du vote.
    - L'écran de l'animateur affiche le nombre de définitions reçues, sans
@@ -217,17 +219,51 @@ tableau, et chacun vote pour celle qu'il croit vraie.
    concept en cours par un autre concept inutilisé de la banque. Le détenteur
    reste le même.
 
+## Correction automatique des fautes
+
+Pour qu'on ne reconnaisse pas les fausses définitions à leurs fautes :
+
+- pendant l'écriture, l'encadré active le correcteur du navigateur (les
+  fautes sont soulignées en direct) ;
+- au passage au vote, **toutes** les définitions, y compris la vraie, sont
+  corrigées de la même façon : espaces, majuscule initiale, point final, puis
+  orthographe et grammaire avec le service gratuit LanguageTool (une seule
+  requête par manche). Le LaTeX entre `$...$` et le vocabulaire de la banque
+  de concepts ne sont jamais modifiés ;
+- l'écran de l'animateur indique combien de fautes ont été corrigées. Si
+  LanguageTool ne répond pas, le jeu continue avec la mise en forme seulement.
+
+Les réglages (désactiver la correction, mots à protéger) sont au début de
+`js/dico-correct.js`.
+
 ## Pointage
 
 Le pointage se règle dans `js/dico-settings.js` :
 
 - 2 points pour un vote sur la vraie définition ;
 - 1 point à l'auteur d'une fausse définition pour chaque vote qu'elle reçoit ;
-- 2 points au détenteur de la vraie définition si personne ne la trouve.
+- au détenteur de la vraie définition : 1 point par joueur qui trouve sa
+  réécriture, **à condition que certains la trouvent, mais pas tous**. Si
+  personne ne la trouve (trop déformée) ou si tout le monde la trouve (trop
+  évidente), il ne reçoit rien. Il doit donc viser le plus de votes possible,
+  sauf un.
 
-Les boutons **−1 / +1** à côté de chaque joueur permettent un ajustement
-manuel. Ils servent par exemple à récompenser un joueur dont la « fausse »
-définition était en fait juste.
+À la révélation, la réécriture est affichée avec l'originale en dessous. Le
+bouton **Réécriture incorrecte** retire au détenteur ses points de la manche
+si sa réécriture a changé le sens de la définition (un second clic annule).
+Ceux qui ont voté pour elle gardent leurs points.
+
+L'écran de l'animateur affiche par défaut le **top 5**, avec tous les ex æquo
+(par ex. s'il y a égalité au 5e rang, tous les joueurs à égalité sont affichés). Le bouton **Afficher le
+classement complet** (à côté du pointage et au classement final) montre tout
+le monde ; **Revenir au top 5** le cache de nouveau. Chaque joueur voit en tout
+temps, en haut de son écran, son pointage et son rang (par ex. « 4 points ·
+3e sur 18 »).
+
+Les boutons **−1 / +1** permettent un ajustement manuel : à côté des joueurs
+du top 5, et, à la révélation, à côté de l'auteur de chaque fausse
+définition (par exemple pour récompenser un joueur dont la « fausse »
+définition était en fait juste).
 
 ## Modifier les concepts
 
