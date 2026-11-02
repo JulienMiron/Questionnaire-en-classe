@@ -487,3 +487,5 @@ footer.hint {
 .choice-join { margin-top: 2.5rem; border-style: solid; border-color: var(--yellow); }
 .choice-join .choice-mark { color: var(--yellow); }
 .choice-join + .landing-choices { margin-top: 1rem; }
+.dico-board-head { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+.dico-board-head .dico-panel-title { margin-bottom: 0; }

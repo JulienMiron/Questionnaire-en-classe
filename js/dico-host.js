@@ -250,6 +250,22 @@
 
   // ---------- Affichage ----------
   const TOP_N = 5;
+  let showFullRanking = false; // par défaut : top 5 seulement
+
+  function updateRankingLabels() {
+    const label = showFullRanking ? 'Revenir au top 5' : 'Afficher le classement complet';
+    $('toggle-ranking-btn').textContent = label;
+    $('toggle-final-btn').textContent = label;
+    $('scoreboard-title').textContent = showFullRanking ? 'Classement complet' : 'Top 5';
+    $('final-title').textContent = showFullRanking ? 'Résultats finaux' : 'Résultats finaux : top 5';
+  }
+  ['toggle-ranking-btn', 'toggle-final-btn'].forEach(id => {
+    $(id).addEventListener('click', () => {
+      showFullRanking = !showFullRanking;
+      updateRankingLabels();
+      if (game) render();
+    });
+  });
 
   function addPoint(id, d) {
     return gameRef.child('players/' + id + '/score').transaction(s => (s || 0) + d);
@@ -262,7 +278,7 @@
     // Rang affiché : 1 + nombre de joueurs qui ont strictement plus de points
     // (les ex æquo ont le même rang).
     const rankOf = p => 1 + list.filter(q => (q.score || 0) > (p.score || 0)).length;
-    const shown = list.slice(0, TOP_N);
+    const shown = showFullRanking ? list : list.slice(0, TOP_N);
     listEl.innerHTML = '';
     shown.forEach(p => {
       const li = el('li', colorClass(p.id));
