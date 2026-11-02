@@ -382,3 +382,103 @@ footer.hint {
   .jp-result-list .team-name { flex-basis: calc(100% - 2rem); }
   .jp-res { flex: 1; }
 }
+
+/* ======================= Jeu du dictionnaire ======================= */
+.dico-wrap { max-width: 980px; }
+.dico-panel-title { font-size: 1.1rem; margin-bottom: 0.8rem; }
+.dico-note { color: var(--chalk-dim); font-size: 0.9rem; margin: 0.8rem 0 0; }
+.dico-chips { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.dico-word {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: var(--yellow);
+  margin: 0.1rem 0 1rem;
+  overflow-wrap: anywhere;
+}
+.dico-instructions { color: var(--chalk-dim); font-size: 1.05rem; margin: 0 0 1rem; }
+.dico-counter { font-family: var(--font-display); font-size: 1.3rem; margin: 1rem 0; }
+.dico-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; margin-top: 1rem; }
+.dico-actions .primary.is-ready { box-shadow: 0 0 0 4px rgba(232,197,71,0.35); }
+.dico-role { margin: 0 0 1rem; line-height: 1.5; }
+.dico-role.is-holder {
+  border-left: 4px solid var(--teal);
+  background: rgba(79,176,165,0.12);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.8rem 1rem;
+}
+.dico-role.is-done { color: var(--teal); font-weight: 600; }
+.dico-textarea, .dico-preview {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  background: var(--board-deep);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--chalk);
+  padding: 0.9rem 1rem;
+}
+.dico-textarea { resize: vertical; min-height: 7rem; }
+.dico-textarea:focus { outline: none; border-color: var(--yellow); }
+.dico-preview { border-style: solid; border-color: var(--teal); overflow-x: auto; }
+.dico-sent { color: var(--teal); font-weight: 600; }
+
+.dico-options { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+.dico-option {
+  display: flex; gap: 1rem; align-items: flex-start;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+  line-height: 1.45;
+}
+.dico-option.is-true { border-style: solid; border-color: var(--teal); background: rgba(79,176,165,0.16); }
+.dico-letter {
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--yellow);
+  min-width: 1.4em;
+  flex-shrink: 0;
+}
+.dico-body { flex: 1; min-width: 0; }
+.dico-text { overflow-wrap: anywhere; }
+.dico-option .dico-text { display: block; }
+.dico-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; margin-top: 0.6rem; font-size: 0.9rem; }
+.dico-author { color: var(--chalk-dim); font-weight: 600; }
+.is-true .dico-author { color: var(--teal); }
+.dico-voters { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.dico-vote-count { font-family: var(--font-display); font-weight: 700; }
+.dico-voter {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(245,243,231,0.07);
+}
+.dico-voter .team-dot { width: 9px; height: 9px; }
+.dico-gain { font-family: var(--font-display); font-weight: 700; color: var(--yellow); }
+.dico-explanation {
+  margin: 1.2rem 0 0;
+  border-left: 4px solid var(--yellow);
+  background: rgba(232,197,71,0.1);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.9rem 1.1rem;
+  font-size: 1.05rem;
+}
+.dico-adjust { display: flex; gap: 0.3rem; opacity: 0.5; }
+.dico-adjust:hover, .dico-adjust:focus-within { opacity: 1; }
+
+.dico-vote-list { display: grid; gap: 0.7rem; }
+.dico-vote-btn { display: flex; gap: 0.8rem; align-items: flex-start; flex-wrap: wrap; width: 100%; font-weight: 500; line-height: 1.45; }
+.dico-vote-btn .dico-text { flex: 1; min-width: 0; }
+.dico-vote-btn.is-correct { opacity: 1; }
+.dico-own { flex-basis: 100%; max-width: max-content; margin-left: calc(1.4em + 0.8rem); font-size: 0.8rem; color: var(--chalk-dim); border: 1px dashed var(--line); border-radius: 999px; padding: 0.1rem 0.5rem; }
+.dico-true {
+  font-size: 1.15rem; line-height: 1.5;
+  border-left: 4px solid var(--teal);
+  background: rgba(79,176,165,0.12);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.9rem 1.1rem;
+  margin: 0 0 1.2rem;
+  overflow-x: auto;
+}
+.dico-verdict { display: grid; gap: 0.4rem; text-align: center; font-size: 1.05rem; }
+.dico-round-gain { font-family: var(--font-display); font-size: 1.5rem; color: var(--yellow); margin-top: 0.4rem; }
+.team-list li.is-me { outline: 1.5px solid var(--yellow); }
