@@ -9,9 +9,10 @@ const DICO_SETTINGS = {
   pointsCorrectVote: 2,
   // Points pour l'auteur d'une fausse définition, pour chaque vote reçu.
   pointsPerFooled: 1,
-  // Points pour le joueur qui détient la vraie définition si personne ne la
-  // trouve (0 pour désactiver).
-  pointsHolderIfNobodyFinds: 2,
+  // Points pour le détenteur de la vraie définition, pour chaque votant qui
+  // trouve sa réécriture, à condition que certains la trouvent, mais pas tous.
+  // Si personne ou tout le monde la trouve, il ne reçoit rien.
+  pointsHolderPerFinder: 1,
   // Nombre maximal de caractères d'une définition.
   maxLength: 300
 };

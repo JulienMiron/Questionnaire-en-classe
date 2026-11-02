@@ -24,7 +24,7 @@ const CONCEPTS = [
   },
   {
     word: "Seuil de signification",
-    definition: "La probabilité de rejeter H0 alors qu'elle est vraie.",
+    definition: "La probabilité de rejeter H0 alors qu'elle est vraie, fixée avant de regarder les données.",
     explanation: "Noté $\\alpha$. Ce n'est pas « la probabilité de se tromper quand on rejette H0 »."
   },
   {
@@ -44,12 +44,12 @@ const CONCEPTS = [
   },
   {
     word: "Hypothèse alternative",
-    definition: "L'énoncé sur un paramètre de la population que le chercheur tente d'appuyer avec les données.",
+    definition: "L'énoncé sur un paramètre de la population que le chercheur souhaite appuyer avec les données.",
     explanation: "C'est H1 qu'on cherche à démontrer, pas H0."
   },
   {
     word: "Statistique de test",
-    definition: "Une fonction des données, dont la loi est connue sous H0, qui mesure l'écart entre l'estimation et la valeur supposée vraie du paramètre.",
+    definition: "Une fonction des données, dont la loi est connue sous H0, qui mesure l'écart entre l'estimation et la valeur postulée du paramètre.",
     explanation: "Par ex. $T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$."
   },
   {
@@ -59,12 +59,12 @@ const CONCEPTS = [
   },
   {
     word: "Valeur critique",
-    definition: "La valeur à partir de laquelle on rejette H0.",
+    definition: "La valeur qui sépare la région critique des valeurs de la statistique de test pour lesquelles on ne rejette pas H0.",
     explanation: "Par ex. $t_{0{,}05;\\,24} = 1{,}711$ pour un test unilatéral à droite."
   },
   {
     word: "Test unilatéral",
-    definition: "Un test dont l'hypothèse alternative porte sur un seul côté de la valeur supposée vraie du paramètre.",
+    definition: "Un test dont l'hypothèse alternative porte sur un seul côté de la valeur postulée du paramètre.",
     explanation: "Bluff classique : « un test qui porte sur un seul échantillon »."
   },
   {
@@ -74,12 +74,12 @@ const CONCEPTS = [
   },
   {
     word: "Test bilatéral",
-    definition: "Un test dont l'hypothèse alternative couvre les deux côtés de la valeur supposée vraie du paramètre.",
+    definition: "Un test dont l'hypothèse alternative couvre les deux côtés de la valeur postulée du paramètre.",
     explanation: "Par ex. H1 : $\\mu \\neq \\mu_0$. Bluff classique : « un test qui compare deux échantillons »."
   },
   {
     word: "Règle de décision",
-    definition: "La règle qui indique pour quelles valeurs de la statistique de test on rejette H0.",
+    definition: "La règle, fixée avant de voir les données, qui indique pour quelles valeurs de la statistique de test on rejette H0.",
     explanation: "Par ex. « rejeter H0 si $t_{\\text{obs}} > t_{\\alpha;\\,n-1}$ », ou de façon équivalente « si la valeur-p est inférieure à $\\alpha$ »."
   },
   {
@@ -103,8 +103,8 @@ const CONCEPTS = [
     explanation: "Sous H0, elle vaut $\\alpha$ ; elle augmente à mesure que le paramètre s'éloigne de la valeur postulée et que $n$ augmente."
   },
   {
-    word: "Test t pour une moyenne",
-    definition: "Un test sur la moyenne d'une population normale dont la variance est inconnue, basé sur une loi de Student à n − 1 degrés de liberté.",
+    word: "Test $t$ pour une moyenne",
+    definition: "Un test sur la moyenne d'une population normale dont la variance est inconnue, basé sur une loi de Student à $n-1$ degrés de liberté.",
     explanation: "$T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$ suit une $t_{n-1}$ sous H0."
   }
 ];

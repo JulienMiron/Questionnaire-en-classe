@@ -115,7 +115,9 @@
       conceptIndex,
       word: concept.word,
       holder,
-      entries: { [holder]: concept.definition },
+      // Le détenteur doit réécrire cette définition : sa réécriture arrive
+      // dans entries[holder].
+      original: concept.definition,
       deadline: S.writingTime > 0 ? now() + S.writingTime * 1000 : null
     };
   }
@@ -133,7 +135,11 @@
   function goToVoting() {
     const r = game.round;
     const round = currentRound();
-    const entries = round.entries || {};
+    const entries = Object.assign({}, round.entries || {});
+    // Sans réécriture du détenteur, l'originale est utilisée telle quelle
+    // (et le détenteur ne marquera pas de points).
+    const holderDefault = (entries[round.holder] || '').trim() === '';
+    if (holderDefault) entries[round.holder] = round.original;
     const ids = shuffle(Object.keys(entries).filter(id => (entries[id] || '').trim() !== ''));
     const ownIndex = {};
     ids.forEach((id, i) => { ownIndex[id] = i; });
@@ -146,6 +152,7 @@
       updates['rounds/' + r + '/options'] = result.texts;
       updates['rounds/' + r + '/owners'] = ids;
       updates['rounds/' + r + '/ownIndex'] = ownIndex;
+      updates['rounds/' + r + '/holderDefault'] = holderDefault;
       updates['rounds/' + r + '/corrections'] = result.changes;
       updates['rounds/' + r + '/correctionError'] = result.error;
       updates['rounds/' + r + '/deadline'] = S.votingTime > 0 ? now() + S.votingTime * 1000 : null;
@@ -169,16 +176,43 @@
       if (idx === trueIdx) { add(voter, S.pointsCorrectVote); found++; }
       else if (owners[idx] && owners[idx] !== voter) add(owners[idx], S.pointsPerFooled);
     });
-    if (found === 0 && Object.keys(votes).length > 0) add(round.holder, S.pointsHolderIfNobodyFinds);
+    // Détenteur : des points seulement si certains trouvent, mais pas tous.
+    const nVotes = Object.keys(votes).length;
+    const holderGain = (!round.holderDefault && found > 0 && found < nVotes) ? found * S.pointsHolderPerFinder : 0;
+    add(round.holder, holderGain);
 
     const updates = {};
     Object.entries(gained).forEach(([id, pts]) => {
       updates['players/' + id + '/score'] = (ps[id].score || 0) + pts;
     });
     updates['rounds/' + r + '/gained'] = gained;
+    updates['rounds/' + r + '/holderGain'] = holderGain;
+    updates['rounds/' + r + '/found'] = found;
     updates['rounds/' + r + '/deadline'] = null;
     updates['status'] = 'reveal';
     return gameRef.update(updates);
+  }
+
+  // Bouton « Réécriture incorrecte » : retire (ou redonne) au détenteur les
+  // points qu'il a gagnés à cette manche. Les votants qui l'ont trouvée gardent
+  // leurs points.
+  function toggleRewriteIncorrect() {
+    const r = game.round;
+    const round = currentRound();
+    if (!round || game.status !== 'reveal') return;
+    const marking = !round.rewriteIncorrect;
+    const found = round.found || 0;
+    const nVotes = Object.keys(round.votes || {}).length;
+    const earned = (!round.holderDefault && found > 0 && found < nVotes) ? found * S.pointsHolderPerFinder : 0;
+    const newGain = marking ? 0 : earned;
+    const delta = newGain - (round.holderGain || 0);
+    const updates = {};
+    updates['rounds/' + r + '/rewriteIncorrect'] = marking;
+    updates['rounds/' + r + '/holderGain'] = newGain;
+    updates['rounds/' + r + '/gained/' + round.holder] = newGain || null;
+    return gameRef.update(updates).then(() => {
+      if (delta) return addPoint(round.holder, delta);
+    });
   }
 
   function skipConcept() {
@@ -367,10 +401,11 @@
 
     if (status === 'writing') {
       const entries = round.entries || {};
-      const written = others.filter(id => (entries[id] || '').trim() !== '').length;
+      const everyone = Object.keys(players());
+      const written = everyone.filter(id => (entries[id] || '').trim() !== '').length;
       $('written-count').textContent = written;
-      $('written-total').textContent = others.length;
-      $('to-vote-btn').classList.toggle('is-ready', others.length > 0 && written >= others.length);
+      $('written-total').textContent = everyone.length;
+      $('to-vote-btn').classList.toggle('is-ready', everyone.length > 0 && written >= everyone.length);
       $('skip-btn').disabled = spareConceptIndex() < 0;
     }
 
@@ -405,9 +440,15 @@
         li.appendChild(el('span', 'dico-letter', LETTERS[i]));
         const body = el('div', 'dico-body');
         body.appendChild(el('span', 'dico-text', text));
+        if (isTrue && !round.holderDefault && round.original) {
+          body.appendChild(el('span', 'dico-original', 'Originale : ' + round.original));
+        }
         const meta = el('div', 'dico-meta');
         meta.appendChild(el('span', 'dico-author',
-          isTrue ? `✓ Vraie définition (remise à ${playerName(owners[i])})` : `Écrite par ${playerName(owners[i])}`));
+          isTrue ? (round.holderDefault
+            ? `✓ Vraie définition (originale : ${playerName(owners[i])} ne l'a pas réécrite)`
+            : `✓ Vraie définition, réécrite par ${playerName(owners[i])}`)
+            : `Écrite par ${playerName(owners[i])}`));
         const voters = Object.keys(votes).filter(v => votes[v] === i);
         const vs = el('span', 'dico-voters');
         vs.appendChild(el('span', 'dico-vote-count', voters.length + (voters.length > 1 ? ' votes' : ' vote')));
@@ -420,6 +461,23 @@
         meta.appendChild(vs);
         if (!isTrue && gained[owners[i]] && voters.length) {
           meta.appendChild(el('span', 'dico-gain', '+' + voters.length * S.pointsPerFooled));
+        }
+        if (isTrue) {
+          const hg = round.holderGain || 0;
+          const found = round.found || 0;
+          const why = round.rewriteIncorrect ? 'réécriture jugée incorrecte'
+            : round.holderDefault ? 'pas de réécriture'
+            : found === 0 ? 'personne ne l\'a trouvée'
+            : found >= Object.keys(votes).length ? 'tout le monde l\'a trouvée'
+            : '';
+          meta.appendChild(el('span', 'dico-gain', hg > 0 ? '+' + hg + ' pour ' + playerName(owners[i]) : '0 pour ' + playerName(owners[i]) + (why ? ' (' + why + ')' : '')));
+          if (!round.holderDefault) {
+            const b = el('button', 'btn jp-small' + (round.rewriteIncorrect ? ' is-on' : ''),
+              round.rewriteIncorrect ? 'Annuler : réécriture correcte' : 'Réécriture incorrecte');
+            b.title = 'La réécriture n\'est plus une définition juste : le détenteur perd ses points de la manche.';
+            b.addEventListener('click', () => toggleRewriteIncorrect());
+            meta.appendChild(b);
+          }
         }
         if (!isTrue) {
           // Ajustement manuel pour l'auteur (par ex. si sa « fausse »

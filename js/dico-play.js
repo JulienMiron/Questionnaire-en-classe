@@ -89,6 +89,12 @@
     const text = $('w-text').value.trim();
     if (!text) { $('w-sent').textContent = 'Ta définition est vide.'; return; }
     if (game.status !== 'writing') return;
+    const round = currentRound();
+    const squash = t => (t || '').toLowerCase().replace(/[\s.,;:!?«»"'’()-]+/g, '');
+    if (round && round.holder === myId && squash(text) === squash(round.original)) {
+      $('w-sent').textContent = 'Tu dois réécrire la définition dans tes mots.';
+      return;
+    }
     gameRef.child('rounds/' + game.round + '/entries/' + myId).set(text).then(() => {
       $('w-sent').textContent = 'Envoyée ✓';
       $('w-send').textContent = 'Mettre à jour';
@@ -153,7 +159,7 @@
     const round = currentRound();
     if (!round) return;
     const isHolder = round.holder === myId;
-    const key = status + ':' + game.round + ':' + round.conceptIndex + ':' + isHolder;
+    const key = status + ':' + game.round + ':' + round.conceptIndex + ':' + isHolder + ':' + !!round.rewriteIncorrect + ':' + (round.holderGain || 0);
     const fresh = key !== renderedKey;
     renderedKey = key;
 
@@ -173,27 +179,28 @@
     if (isHolder) {
       $('w-role').innerHTML = '';
       $('w-role').appendChild(el('strong', null, 'Le hasard t\'a remis la vraie définition.'));
-      $('w-role').appendChild(document.createTextNode(' Tu ne peux pas la modifier. Garde le secret : les autres doivent croire que c\'est une invention !'));
+      $('w-role').appendChild(document.createTextNode(
+        ' Réécris-la dans tes mots, sans en changer le sens. Tu gagnes ' + pts(S.pointsHolderPerFinder) +
+        ' par joueur qui la trouve… mais rien si personne ou tout le monde la trouve. Garde le secret !'));
       $('w-role').className = 'dico-role is-holder';
-      text.style.display = 'none';
+      $('w-original-label').style.display = 'block';
       preview.style.display = 'block';
-      preview.textContent = mine;
+      preview.textContent = round.original || '';
       renderMathIn(preview);
-      $('w-send').style.display = 'none';
-      $('w-sent').textContent = '';
-      $('w-help').style.display = 'none';
     } else {
       $('w-role').textContent = 'Invente une fausse définition qui a l\'air vraie. Chaque vote qu\'elle attire te rapporte ' + pts(S.pointsPerFooled) + '.';
       $('w-role').className = 'dico-role';
-      text.style.display = 'block';
-      text.value = mine;
-      text.readOnly = false;
+      $('w-original-label').style.display = 'none';
       preview.style.display = 'none';
-      $('w-send').style.display = '';
-      $('w-send').textContent = mine ? 'Mettre à jour' : 'Envoyer ma définition';
-      $('w-sent').textContent = mine ? 'Envoyée ✓' : '';
-      $('w-help').style.display = 'block';
     }
+    text.style.display = 'block';
+    text.value = mine;
+    text.readOnly = false;
+    text.placeholder = isHolder ? 'Ta réécriture de la vraie définition' : 'Ta fausse définition';
+    $('w-send').style.display = '';
+    $('w-send').textContent = mine ? 'Mettre à jour' : (isHolder ? 'Envoyer ma réécriture' : 'Envoyer ma définition');
+    $('w-sent').textContent = mine ? 'Envoyée ✓' : '';
+    $('w-help').style.display = 'block';
   }
 
   function renderVoting(round, isHolder, fresh) {
@@ -251,7 +258,12 @@
     const lines = [];
     if (isHolder) {
       const found = Object.values(votes).filter(x => x === trueIdx).length;
-      lines.push(found === 0 ? 'Tu détenais la vraie définition, et personne ne l\'a trouvée !' : `Tu détenais la vraie définition. ${found} joueur${found > 1 ? 's l\'ont' : ' l\'a'} trouvée.`);
+      const nVotes = Object.keys(votes).length;
+      if (round.holderDefault) lines.push('Tu n\'as pas réécrit la définition : l\'originale a été utilisée.');
+      else if (found === 0) lines.push('Personne n\'a trouvé ta réécriture : elle était trop bien cachée.');
+      else if (found >= nVotes) lines.push('Tout le monde a trouvé ta réécriture : elle était trop évidente.');
+      else lines.push(`${found} joueur${found > 1 ? 's ont' : ' a'} trouvé ta réécriture.`);
+      if (round.rewriteIncorrect) lines.push('L\'animateur a jugé ta réécriture incorrecte.');
     } else {
       if (myVote === trueIdx) lines.push('Bravo, tu as trouvé la vraie définition !');
       else if (myVote === undefined || myVote === null) lines.push('Tu n\'as pas voté.');
