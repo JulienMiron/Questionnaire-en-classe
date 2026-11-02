@@ -249,13 +249,24 @@
   timerInterval = setInterval(() => { if (game) tick(); }, 250);
 
   // ---------- Affichage ----------
+  const TOP_N = 5;
+
+  function addPoint(id, d) {
+    return gameRef.child('players/' + id + '/score').transaction(s => (s || 0) + d);
+  }
+
   function renderScoreboard(listEl, withAdjust) {
     const list = Object.entries(players()).map(([id, p]) => ({ id, ...p }));
     list.sort((a, b) => (b.score || 0) - (a.score || 0) || (a.joinedAt || 0) - (b.joinedAt || 0));
+    // Seules les 5 premières lignes sont affichées à l'écran de l'animateur.
+    // Rang affiché : 1 + nombre de joueurs qui ont strictement plus de points
+    // (les ex æquo ont le même rang).
+    const rankOf = p => 1 + list.filter(q => (q.score || 0) > (p.score || 0)).length;
+    const shown = list.slice(0, TOP_N);
     listEl.innerHTML = '';
-    list.forEach((p, i) => {
+    shown.forEach(p => {
       const li = el('li', colorClass(p.id));
-      li.appendChild(el('span', 'rank', String(i + 1)));
+      li.appendChild(el('span', 'rank', String(rankOf(p))));
       li.appendChild(el('span', 'team-dot'));
       li.appendChild(el('span', 'team-name', p.name));
       if (withAdjust) {
@@ -263,9 +274,7 @@
         [-1, +1].forEach(d => {
           const b = el('button', 'btn jp-small', d > 0 ? '+1' : '−1');
           b.title = 'Ajustement manuel';
-          b.addEventListener('click', () => {
-            gameRef.child('players/' + p.id + '/score').transaction(s => (s || 0) + d);
-          });
+          b.addEventListener('click', () => addPoint(p.id, d));
           adj.appendChild(b);
         });
         li.appendChild(adj);
@@ -395,6 +404,18 @@
         meta.appendChild(vs);
         if (!isTrue && gained[owners[i]] && voters.length) {
           meta.appendChild(el('span', 'dico-gain', '+' + voters.length * S.pointsPerFooled));
+        }
+        if (!isTrue) {
+          // Ajustement manuel pour l'auteur (par ex. si sa « fausse »
+          // définition était en fait juste), même s'il n'est pas dans le top 5.
+          const adj = el('span', 'dico-adjust');
+          [-1, +1].forEach(d => {
+            const b = el('button', 'btn jp-small', d > 0 ? '+1' : '−1');
+            b.title = 'Ajustement manuel pour ' + playerName(owners[i]);
+            b.addEventListener('click', () => addPoint(owners[i], d));
+            adj.appendChild(b);
+          });
+          meta.appendChild(adj);
         }
         body.appendChild(meta);
         li.appendChild(body);

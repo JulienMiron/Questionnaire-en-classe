@@ -242,9 +242,14 @@ Le pointage se règle dans `js/dico-settings.js` :
 - 1 point à l'auteur d'une fausse définition pour chaque vote qu'elle reçoit ;
 - 2 points au détenteur de la vraie définition si personne ne la trouve.
 
-Les boutons **−1 / +1** à côté de chaque joueur permettent un ajustement
-manuel. Ils servent par exemple à récompenser un joueur dont la « fausse »
-définition était en fait juste.
+L'écran de l'animateur n'affiche que le **top 5**. Chaque joueur voit en tout
+temps, en haut de son écran, son pointage et son rang (par ex. « 4 points ·
+3e sur 18 »).
+
+Les boutons **−1 / +1** permettent un ajustement manuel : à côté des joueurs
+du top 5, et, à la révélation, à côté de l'auteur de chaque fausse
+définition (par exemple pour récompenser un joueur dont la « fausse »
+définition était en fait juste).
 
 ## Modifier les concepts
 

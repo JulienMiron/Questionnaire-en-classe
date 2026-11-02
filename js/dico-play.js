@@ -142,7 +142,9 @@
       return;
     }
     $('me-pill').textContent = me.name;
-    $('score-pill').textContent = pts(me.score || 0);
+    const all = Object.values(game.players || {});
+    const rank = 1 + all.filter(p => (p.score || 0) > (me.score || 0)).length;
+    $('score-pill').textContent = pts(me.score || 0) + ' · ' + rank + (rank === 1 ? 'er' : 'e') + ' sur ' + all.length;
 
     const status = game.status;
     if (status === 'lobby') { renderedKey = 'lobby'; show('lobby-view'); return; }
