@@ -242,7 +242,8 @@ Le pointage se règle dans `js/dico-settings.js` :
 - 1 point à l'auteur d'une fausse définition pour chaque vote qu'elle reçoit ;
 - 2 points au détenteur de la vraie définition si personne ne la trouve.
 
-L'écran de l'animateur affiche par défaut le **top 5**. Le bouton **Afficher le
+L'écran de l'animateur affiche par défaut le **top 5**, avec tous les ex æquo
+(par ex. s'il y a égalité au 5e rang, tous les joueurs à égalité sont affichés). Le bouton **Afficher le
 classement complet** (à côté du pointage et au classement final) montre tout
 le monde ; **Revenir au top 5** le cache de nouveau. Chaque joueur voit en tout
 temps, en haut de son écran, son pointage et son rang (par ex. « 4 points ·

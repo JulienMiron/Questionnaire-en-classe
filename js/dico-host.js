@@ -274,11 +274,11 @@
   function renderScoreboard(listEl, withAdjust) {
     const list = Object.entries(players()).map(([id, p]) => ({ id, ...p }));
     list.sort((a, b) => (b.score || 0) - (a.score || 0) || (a.joinedAt || 0) - (b.joinedAt || 0));
-    // Seules les 5 premières lignes sont affichées à l'écran de l'animateur.
-    // Rang affiché : 1 + nombre de joueurs qui ont strictement plus de points
-    // (les ex æquo ont le même rang).
+    // Rang : 1 + nombre de joueurs qui ont strictement plus de points (les ex
+    // æquo ont le même rang). Par défaut, on affiche tous les joueurs dont le
+    // rang est dans le top 5, ex æquo compris.
     const rankOf = p => 1 + list.filter(q => (q.score || 0) > (p.score || 0)).length;
-    const shown = showFullRanking ? list : list.slice(0, TOP_N);
+    const shown = showFullRanking ? list : list.filter(p => rankOf(p) <= TOP_N);
     listEl.innerHTML = '';
     shown.forEach(p => {
       const li = el('li', colorClass(p.id));
