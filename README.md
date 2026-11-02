@@ -1,9 +1,170 @@
 # Jeux en classe
 
-La page d'accueil (`index.html`) propose deux jeux :
+La page d'accueil (`index.html`) propose trois jeux :
 
-- **Jeu du dictionnaire** (`dictionnaire.html`) — décrit ci-dessous ;
+- **Questionnaire en classe** (`questionnaire.html`) — décrit ci-dessous ;
+- **Jeu du dictionnaire** (`dictionnaire.html`) — voir la section [Jeu du dictionnaire](#jeu-du-dictionnaire) ;
 - **Jeopardy** (`jeopardy.html`) — voir la section [Jeopardy](#jeopardy) à la fin.
+
+## Codes de partie (communs aux jeux)
+
+Le questionnaire et le jeu du dictionnaire utilisent la même façon de créer
+les codes, dans `js/room-code.js` :
+
+- chaque partie reçoit un code à 4 chiffres et est enregistrée dans Firebase
+  avec son type de jeu ;
+- un code déjà pris par une partie de moins de 12 heures n'est jamais
+  redonné, peu importe le jeu. On peut donc faire jouer un questionnaire et
+  un jeu du dictionnaire en même temps (dans deux onglets ou deux classes)
+  sans conflit ;
+- le bouton **Rejoindre une partie avec un code** de la page d'accueil
+  (`rejoindre.html`) demande seulement le code et envoie l'étudiant vers le
+  bon jeu. Si un étudiant entre son code dans la page d'un autre jeu, il est
+  redirigé automatiquement.
+
+Pour ajouter un nouveau jeu avec code, il suffit d'ajouter une ligne dans
+`GAME_TYPES` (dans `js/room-code.js`) et de créer la partie avec
+`createRoom('mon-jeu', {...})`.
+
+
+# Questionnaire en classe
+
+Un jeu-questionnaire par équipes : chaque équipe joue sur son propre appareil
+(cellulaire, tablette, ordinateur), et un écran "animateur" projeté en classe
+affiche les questions, le déroulement et le pointage de toutes les équipes en
+temps réel.
+
+- `index.html` — choix du jeu
+- `questionnaire.html` — accueil du questionnaire (choisir Animateur ou Équipe)
+- `host.html` — écran de l'animateur (à projeter)
+- `play.html` — écran d'une équipe (sur son propre appareil)
+- `js/questions.js` — **la banque de questions à modifier**
+- `js/firebase-config.js` — la connexion à ta base de données (à configurer)
+
+## Comment ça marche
+
+Les appareils doivent se synchroniser entre eux (les réponses des équipes
+doivent arriver à l'animateur, et le pointage doit s'afficher partout).
+GitHub Pages n'héberge que des fichiers statiques, il ne peut pas faire ça
+tout seul : ce site utilise donc **Firebase Realtime Database**, un service
+gratuit de Google, comme "tableau partagé" entre les appareils. Il te faut un
+compte Google et environ 5 minutes pour le configurer — voir ci-dessous.
+
+## Étape 1 — Créer un projet Firebase (gratuit)
+
+1. Va sur [console.firebase.google.com](https://console.firebase.google.com)
+   et connecte-toi avec un compte Google.
+2. Clique **Ajouter un projet**, donne-lui un nom (ex. `quiz-classe`), et
+   termine la création (tu peux désactiver Google Analytics, il n'est pas
+   nécessaire).
+3. Dans le menu de gauche, va dans **Build > Realtime Database**, clique
+   **Créer une base de données**, choisis un emplacement, puis démarre
+   **en mode test** (règles ouvertes pendant 30 jours — largement assez pour
+   un projet de classe ; tu peux resserrer les règles plus tard).
+4. Une fois créée, clique l'onglet **Règles** et remplace le contenu par :
+   ```json
+   {
+     "rules": {
+       "games": {
+         ".read": true,
+         ".write": true
+       }
+     }
+   }
+   ```
+   Ces règles sont volontairement ouvertes pour que ce soit simple à faire
+   fonctionner sans authentification. C'est adapté à un jeu en classe, mais
+   ne t'en sers pas pour quelque chose à enjeu élevé (comme un examen noté) :
+   n'importe qui connaissant l'URL de ta base pourrait théoriquement lire ou
+   modifier les données.
+5. Retourne dans **Paramètres du projet** (icône d'engrenage) > onglet
+   **Général** > section **Vos applications**. Clique l'icône `</>` (Web),
+   donne un surnom à l'application, puis clique **Enregistrer l'application**.
+6. Firebase affiche un bloc de code contenant `firebaseConfig = { ... }`.
+   Copie ces valeurs dans `js/firebase-config.js`, à la place des valeurs
+   `"TON-PROJET"` / `"COLLE_TA_CLE_ICI"`.
+
+## Étape 2 — Modifier les questions
+
+Ouvre `js/questions.js` et remplace la liste `QUESTIONS` par les tiennes.
+Chaque question a un texte, une liste de choix, l'index (0, 1, 2…) de la
+bonne réponse, et un nombre de points. Le fichier contient des exemples que
+tu peux directement écraser.
+
+## Étape 3 — Mettre le site en ligne avec GitHub Pages
+
+1. Crée un nouveau dépôt GitHub (public) et mets-y tous les fichiers de ce
+   dossier (`index.html`, `host.html`, `play.html`, `css/`, `js/`, ce
+   `README.md`).
+2. Dans le dépôt sur GitHub : **Settings > Pages**.
+3. Sous **Build and deployment**, choisis la branche `main` (dossier `/root`),
+   puis **Save**.
+4. Après une minute ou deux, GitHub affiche l'adresse du site (quelque chose
+   comme `https://tonnomdusager.github.io/nom-du-depot/`). C'est cette
+   adresse que tu partages avec ta classe.
+
+## Utilisation en classe
+
+1. Sur ton ordinateur/projecteur, ouvre **Questionnaire en classe > Je suis
+   l'animateur**, puis **Créer la partie**. Un code à 4 chiffres apparaît.
+2. Chaque équipe ouvre le site sur son propre appareil, clique **Rejoindre
+   une partie avec un code** (ou **Questionnaire en classe > Je suis une
+   équipe**), entre le code et un nom d'équipe.
+3. Une fois toutes les équipes présentes, clique **Commencer la partie** sur
+   l'écran animateur.
+4. Pour chaque question, un chrono se lance automatiquement. La bonne réponse
+   est révélée dès que toutes les équipes présentes ont répondu, ou dès que
+   le temps est écoulé — pas besoin de cliquer, sauf si tu veux forcer la
+   révélation plus tôt (bouton **Révéler la réponse maintenant**). Clique
+   ensuite **Question suivante**.
+5. À la fin, le classement final s'affiche sur tous les écrans.
+
+## Écrire des mathématiques en LaTeX
+
+Le texte d'une question et ses choix de réponse peuvent contenir du LaTeX,
+rendu automatiquement par KaTeX. Entoure ta formule de `$...$` pour du texte
+en ligne, ou `$$...$$` pour une formule centrée sur sa propre ligne. Comme
+c'est écrit dans une chaîne JavaScript, double chaque backslash du LaTeX :
+`\frac` devient `\\frac`, `\int` devient `\\int`, etc. Exemple, dans
+`js/questions.js` :
+```js
+text: "$$F(x) = \\int_{-\\infty}^{x} f(t)\\,dt$$"
+```
+
+## Consulter les questions sans créer de partie
+
+Le bouton **Consulter les questions** sur la page d'accueil ouvre `preview.html` :
+une navigation Précédente/Suivante à travers toutes les questions, avec un
+bouton pour afficher la bonne réponse. Utile pour relire ou répéter le
+questionnaire seul, sans passer par Firebase ni créer de code de partie.
+
+## Reconnexion d'une équipe
+
+Si une équipe ferme accidentellement sa fenêtre (ou change d'appareil), elle
+peut rejoindre à nouveau avec le code de la partie en tapant **exactement le
+même nom d'équipe** — elle reprend alors son score et sa progression
+(question en cours, réponse déjà envoyée le cas échéant), même si la partie
+est déjà commencée. Un nom différent, une fois la partie commencée, n'est
+plus accepté. Évite donc que deux équipes choisissent le même nom : la
+reconnexion se fait sur la base du nom exact, et un doublon rendrait la
+reprise ambiguë.
+
+## Chrono et pointage selon la rapidité
+
+Chaque question a une limite de temps (`timeLimit`, en secondes, réglable
+dans `js/questions.js`). Une bonne réponse rapporte entre 50 % et 100 % des
+points maximum de la question (`points` dans `js/questions.js`), selon la
+vitesse de réponse : répondre instantanément rapporte le plein montant,
+répondre juste avant la fin du chrono rapporte la moitié. Une équipe qui ne
+répond pas à temps ne reçoit aucun point pour cette question.
+
+## Limites à connaître (et pistes d'amélioration)
+
+- Les équipes ne peuvent rejoindre qu'avant le début de la partie (pas en
+  cours de route).
+- Les règles Firebase en mode test expirent après 30 jours ; il suffit d'y
+  retourner et de les remettre (voir Étape 1.4) si tu réutilises le projet
+  plus tard.
 
 # Jeu du dictionnaire
 

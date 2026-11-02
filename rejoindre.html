@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rejoindre une partie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="board">
+  <div class="wrap">
+    <p class="back-link"><a class="btn" href="index.html">← Accueil</a></p>
+    <h1 style="text-align:center;">Rejoindre une partie</h1>
+    <p class="center-note" style="padding:0.5rem 0 0;">Entre le code affiché au tableau : tu seras dirigé vers le bon jeu.</p>
+    <form class="join-form" id="join-form" style="margin-top:1.5rem;">
+      <div>
+        <span class="room-code-label">Code de la partie</span>
+        <input type="text" id="code-input" inputmode="numeric" maxlength="4" placeholder="1234" autocomplete="off" autofocus>
+      </div>
+      <button class="primary" type="submit">Continuer</button>
+      <p class="error-text" id="join-error"></p>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/room-code.js"></script>
+  <script>
+    document.getElementById('join-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const err = document.getElementById('join-error');
+      const code = document.getElementById('code-input').value.trim();
+      err.textContent = '';
+      if (!/^\d{4}$/.test(code)) { err.textContent = 'Le code doit contenir 4 chiffres.'; return; }
+      lookupRoom(code).then(r => {
+        if (!r.exists || !GAME_TYPES[r.type]) { err.textContent = "Cette partie n'existe pas. Vérifie le code."; return; }
+        location.href = GAME_TYPES[r.type].playerPage + '?code=' + encodeURIComponent(code);
+      }).catch(e2 => { err.textContent = 'Erreur de connexion : ' + e2.message; });
+    });
+  </script>
+</body>
+</html>

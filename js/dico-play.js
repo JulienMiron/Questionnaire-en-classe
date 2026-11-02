@@ -41,7 +41,8 @@
 
     db.ref('games/' + code).get().then(snap => {
       const g = snap.val();
-      if (!g || g.type !== 'dictionnaire') { err.textContent = "Cette partie n'existe pas. Vérifie le code."; return; }
+      if (!g) { err.textContent = "Cette partie n'existe pas. Vérifie le code."; return; }
+      if (redirectIfOtherGame(gameTypeOf(g), 'dictionnaire', code)) return;
       if (g.status === 'finished') { err.textContent = 'Cette partie est terminée.'; return; }
       const ps = g.players || {};
       // Même nom (sans tenir compte des majuscules) : on reprend la place du

@@ -64,17 +64,9 @@
   }
 
   // ---------- Création / reprise ----------
-  function makeRoomCode() { return String(Math.floor(1000 + Math.random() * 9000)); }
-
   $('create-game-btn').addEventListener('click', () => {
-    const code = makeRoomCode();
-    const ref = db.ref('games/' + code);
-    ref.set({
-      type: 'dictionnaire',
-      status: 'lobby',
-      round: -1,
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => openGame(code))
+    createRoom('dictionnaire', { status: 'lobby', round: -1 })
+      .then(code => openGame(code))
       .catch(err => { $('setup-error').textContent = 'Impossible de créer la partie : ' + err.message; });
   });
 

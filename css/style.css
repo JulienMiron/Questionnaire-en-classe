@@ -484,3 +484,6 @@ footer.hint {
 .team-list li.is-me { outline: 1.5px solid var(--yellow); }
 .dico-rounds-info { font-weight: 600; margin: 0.8rem 0 0; }
 .dico-rounds-info.is-warning { color: var(--coral); }
+.choice-join { margin-top: 2.5rem; border-style: solid; border-color: var(--yellow); }
+.choice-join .choice-mark { color: var(--yellow); }
+.choice-join + .landing-choices { margin-top: 1rem; }
