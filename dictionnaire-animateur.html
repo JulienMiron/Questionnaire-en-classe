@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animateur — Jeu du dictionnaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="board">
+  <div class="wrap dico-wrap">
+
+    <!-- Avant la création de la partie -->
+    <section id="setup-screen" class="center-note" style="padding-top:4rem;">
+      <h1 style="margin-bottom:0.6rem;">Jeu du dictionnaire</h1>
+      <p>Un code de partie va être généré. Les joueurs le saisissent sur leur appareil pour s'inscrire.</p>
+      <button class="primary" id="create-game-btn" style="margin-top:1.2rem;">Créer la partie</button>
+      <p id="resume-row" style="display:none; margin-top:1rem;">
+        <button class="btn" id="resume-btn">Reprendre la partie <span id="resume-code"></span></button>
+      </p>
+      <p class="error-text" id="setup-error"></p>
+    </section>
+
+    <!-- Partie -->
+    <section id="game-screen" style="display:none;">
+      <div class="top-row">
+        <div>
+          <span class="room-code-label">Code de la partie</span>
+          <div class="room-code" id="room-code-display">----</div>
+        </div>
+        <span class="status-pill" id="status-pill">Salle d'attente</span>
+      </div>
+
+      <!-- Salle d'attente -->
+      <div class="panel" id="lobby-panel">
+        <h2 class="dico-panel-title">Joueurs inscrits (<span id="player-count">0</span>)</h2>
+        <ul class="team-list dico-chips" id="lobby-list"></ul>
+        <p class="dico-note">Il faut au moins 2 joueurs. Des joueurs peuvent aussi s'inscrire en cours de partie.</p>
+        <button class="primary" id="start-btn" style="margin-top:1rem;" disabled>Commencer la partie</button>
+      </div>
+
+      <!-- Manche : écriture / vote / révélation -->
+      <div class="panel" id="round-panel" style="display:none;">
+        <div class="timer-row">
+          <span class="room-code-label" id="round-progress"></span>
+          <span class="timer-seconds" id="timer-seconds"></span>
+        </div>
+        <div class="timer-track" id="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+        <p class="room-code-label">Le mot</p>
+        <h2 class="dico-word" id="round-word"></h2>
+
+        <!-- Écriture -->
+        <div id="writing-block">
+          <p class="dico-instructions">Écrivez une fausse définition crédible sur votre appareil. Un joueur choisi au hasard a reçu la vraie.</p>
+          <p class="dico-counter"><span id="written-count">0</span> / <span id="written-total">0</span> définitions reçues</p>
+          <div class="dico-actions">
+            <button class="primary" id="to-vote-btn">Passer au vote</button>
+            <button class="btn" id="skip-btn">Changer de concept</button>
+          </div>
+        </div>
+
+        <!-- Vote -->
+        <div id="voting-block" style="display:none;">
+          <p class="dico-instructions">Votez sur votre appareil pour la définition que vous croyez vraie.</p>
+          <ol class="dico-options" id="voting-options"></ol>
+          <p class="dico-counter"><span id="voted-count">0</span> / <span id="voted-total">0</span> votes reçus</p>
+          <div class="dico-actions">
+            <button class="primary" id="reveal-btn">Révéler la vraie définition</button>
+          </div>
+        </div>
+
+        <!-- Révélation -->
+        <div id="reveal-block" style="display:none;">
+          <ol class="dico-options is-revealed" id="reveal-options"></ol>
+          <p class="dico-explanation" id="reveal-explanation" style="display:none;"></p>
+          <div class="dico-actions">
+            <button class="primary" id="next-btn">Manche suivante</button>
+            <button class="btn" id="end-btn">Terminer la partie</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="dico-panel-title">Pointage</h2>
+        <ul class="team-list" id="scoreboard"></ul>
+      </div>
+    </section>
+
+    <!-- Fin -->
+    <section id="finished-screen" style="display:none;">
+      <h1 style="text-align:center; margin-bottom:1.5rem;">Résultats finaux</h1>
+      <ul class="team-list" id="final-scoreboard"></ul>
+      <p style="text-align:center; margin-top:2rem;">
+        <a class="btn" href="dictionnaire-animateur.html?nouvelle=1">Nouvelle partie</a>
+      </p>
+    </section>
+
+    <footer class="hint">Garde cet écran affiché : c'est ce que la classe regarde pendant le jeu.</footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="js/katex-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/dico-settings.js"></script>
+  <script src="js/concepts.js"></script>
+  <script src="js/dico-host.js"></script>
+</body>
+</html>
