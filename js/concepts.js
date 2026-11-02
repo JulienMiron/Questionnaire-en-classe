@@ -49,7 +49,7 @@ const CONCEPTS = [
   },
   {
     word: "Statistique de test",
-    definition: "Une fonction des données, dont la loi est connue sous H0, qui mesure l'écart entre l'estimation et la valeur postulée du paramètre.",
+    definition: "Une fonction des données, dont la loi est connue sous H0, qui mesure l'écart entre l'estimation et la valeur supposée vraie du paramètre.",
     explanation: "Par ex. $T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$."
   },
   {
