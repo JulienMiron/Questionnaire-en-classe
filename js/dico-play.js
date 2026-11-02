@@ -48,9 +48,13 @@
       // joueur, par exemple après avoir fermé la fenêtre par erreur.
       const existing = Object.keys(ps).find(id => ps[id].name.toLowerCase() === name.toLowerCase());
       if (existing) return attach(code, existing);
+      if (g.status !== 'lobby') {
+        err.textContent = "La partie est déjà commencée. Pour reprendre ta place, utilise exactement le même nom qu'à ton inscription.";
+        return;
+      }
       const ref = db.ref('games/' + code + '/players').push();
       return ref.set({
-        name, score: 0, holderCount: 0,
+        name, score: 0,
         joinedAt: firebase.database.ServerValue.TIMESTAMP
       }).then(() => attach(code, ref.key));
     }).catch(e2 => { err.textContent = 'Erreur de connexion : ' + e2.message; });
@@ -146,7 +150,7 @@
     const round = currentRound();
     if (!round) return;
     const isHolder = round.holder === myId;
-    const key = status + ':' + game.round + ':' + isHolder;
+    const key = status + ':' + game.round + ':' + round.conceptIndex + ':' + isHolder;
     const fresh = key !== renderedKey;
     renderedKey = key;
 

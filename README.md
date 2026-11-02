@@ -26,12 +26,17 @@ tableau, et chacun vote pour celle qu'il croit vraie.
 1. Sur l'ordinateur relié au projecteur, ouvre **Jeu du dictionnaire > Je suis
    l'animateur**, puis clique **Créer la partie**. Un code à 4 chiffres apparaît.
 2. Chaque étudiant ouvre **Je suis un joueur** sur son appareil et s'inscrit
-   avec le code et son nom. Il faut au moins 2 joueurs. On peut aussi
-   s'inscrire en cours de partie.
-3. Clique **Commencer la partie**. Le concept s'affiche sur tous les écrans.
-   - Un joueur tiré au hasard voit la vraie définition dans un encadré non
-     modifiable. Le tirage se fait parmi les joueurs qui ont détenu la vraie
-     définition le moins souvent, pour que le rôle tourne.
+   avec le code et son nom. Il faut au moins 2 joueurs.
+3. Clique **Commencer la partie** quand tout le monde est inscrit. Le nombre
+   de manches est alors fixé : **une manche par joueur**. Les concepts sont
+   tirés au hasard dans la banque (par exemple 7 concepts parmi 19 pour
+   7 joueurs), et l'ordre des détenteurs est tiré au hasard, de sorte que
+   **chaque joueur reçoit la vraie définition exactement une fois**. Après le
+   début, on ne peut plus s'inscrire (seulement reprendre sa place). S'il y a
+   plus de joueurs que de concepts, l'écran d'attente t'avertit.
+   - À chaque manche, le concept s'affiche sur tous les écrans. Le joueur
+     dont c'est le tour voit la vraie définition dans un encadré non
+     modifiable.
    - Les autres écrivent leur fausse définition dans l'encadré, puis cliquent
      **Envoyer**. Ils peuvent la modifier jusqu'au début du vote.
    - L'écran de l'animateur affiche le nombre de définitions reçues, sans
@@ -47,8 +52,9 @@ tableau, et chacun vote pour celle qu'il croit vraie.
    quoi. Il affiche aussi le commentaire prévu dans `concepts.js` pour lancer
    la discussion.
 6. Clique **Manche suivante**, ou **Terminer la partie** pour afficher le
-   classement final. Pendant l'écriture, **Changer de concept** passe au
-   concept suivant si celui en cours ne convient pas.
+   classement final. Pendant l'écriture, **Changer de concept** remplace le
+   concept en cours par un autre concept inutilisé de la banque. Le détenteur
+   reste le même.
 
 ## Pointage
 
@@ -65,8 +71,9 @@ définition était en fait juste.
 ## Modifier les concepts
 
 Dans `js/concepts.js`, chaque concept a un `word`, une `definition` (la vraie)
-et, si tu le souhaites, une `explanation` affichée à la révélation. Les
-concepts sont joués dans l'ordre de la liste. Le LaTeX est accepté entre
+et, si tu le souhaites, une `explanation` affichée à la révélation. La banque
+contient 19 concepts. À chaque partie, on en tire au hasard autant qu'il y a
+de joueurs. Le LaTeX est accepté entre
 `$...$`, avec les backslashs doublés (`\\alpha`). Les joueurs peuvent aussi
 écrire du LaTeX dans leurs définitions.
 

@@ -71,5 +71,40 @@ const CONCEPTS = [
     word: "Résultat statistiquement significatif",
     definition: "Un résultat qui mène au rejet de $H_0$ au seuil de signification fixé.",
     explanation: "Significatif ne veut pas dire important en pratique."
+  },
+  {
+    word: "Test bilatéral",
+    definition: "Un test dont l'hypothèse alternative couvre les deux côtés de la valeur postulée du paramètre.",
+    explanation: "Par ex. $H_1 : \\mu \\neq \\mu_0$. Bluff classique : « un test qui compare deux échantillons »."
+  },
+  {
+    word: "Règle de décision",
+    definition: "La règle, fixée avant de voir les données, qui indique pour quelles valeurs de la statistique de test on rejette $H_0$.",
+    explanation: "Par ex. « rejeter $H_0$ si $t_{\\text{obs}} > t_{\\alpha;\\,n-1}$ », ou de façon équivalente « si la valeur-p est inférieure à $\\alpha$ »."
+  },
+  {
+    word: "Loi de la statistique de test sous $H_0$",
+    definition: "La loi que suit la statistique de test lorsqu'on suppose que l'hypothèse nulle est vraie.",
+    explanation: "C'est elle qui sert à calculer la valeur-p et les valeurs critiques (par ex. une Student à $n-1$ degrés de liberté)."
+  },
+  {
+    word: "Valeur observée de la statistique de test",
+    definition: "Le nombre obtenu en calculant la statistique de test avec les données de l'échantillon.",
+    explanation: "Notée par ex. $t_{\\text{obs}}$ ; on la compare à la valeur critique ou on s'en sert pour calculer la valeur-p."
+  },
+  {
+    word: "Ne pas rejeter $H_0$",
+    definition: "Conclure que les données ne fournissent pas suffisamment de preuves contre l'hypothèse nulle.",
+    explanation: "Ce n'est pas « accepter $H_0$ » ni « prouver que $H_0$ est vraie »."
+  },
+  {
+    word: "Fonction de puissance",
+    definition: "La fonction qui donne, pour chaque valeur possible du paramètre, la probabilité de rejeter $H_0$.",
+    explanation: "Sous $H_0$, elle vaut $\\alpha$ ; elle augmente à mesure que le paramètre s'éloigne de la valeur postulée et que $n$ augmente."
+  },
+  {
+    word: "Test $t$ pour une moyenne",
+    definition: "Un test sur la moyenne d'une population normale dont la variance est inconnue, basé sur une loi de Student à $n-1$ degrés de liberté.",
+    explanation: "$T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$ suit une $t_{n-1}$ sous $H_0$."
   }
 ];
