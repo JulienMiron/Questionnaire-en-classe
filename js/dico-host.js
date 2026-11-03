@@ -101,12 +101,37 @@
   // Au départ : autant de manches que de joueurs (au plus le nombre de
   // concepts), un ordre aléatoire des détenteurs et des concepts tirés au
   // hasard dans la banque.
+  // Nombre de fois que chaque joueur (ou équipe) détient la vraie définition :
+  // le plus grand nombre possible pour que tout le monde l'ait le même nombre
+  // de fois avec les concepts de la banque (par ex. 18 concepts et 6 équipes :
+  // 3 fois chacune, 18 manches).
+  function turnsPerPlayer(nPlayers) {
+    return nPlayers > 0 ? Math.floor(CONCEPTS.length / nPlayers) : 0;
+  }
+
+  // Ordre des détenteurs : des « tours » successifs dans lesquels chaque
+  // joueur passe une fois, dans un ordre aléatoire, sans que le même joueur
+  // ait deux manches de suite.
+  function holderOrder(ids, turns) {
+    const order = [];
+    for (let t = 0; t < turns; t++) {
+      let block = shuffle(ids);
+      if (order.length && block.length > 1 && block[0] === order[order.length - 1]) {
+        [block[0], block[1]] = [block[1], block[0]];
+      }
+      order.push(...block);
+    }
+    return order;
+  }
+
   function startGame() {
-    const ids = shuffle(Object.keys(players()));
-    const n = Math.min(ids.length, CONCEPTS.length);
-    const concepts = shuffle(CONCEPTS.map((_, i) => i)).slice(0, n);
-    return gameRef.update({ plan: { holders: ids.slice(0, n), concepts } })
-      .then(() => { game.plan = { holders: ids.slice(0, n), concepts }; return startRound(0); });
+    const ids = Object.keys(players());
+    const turns = Math.max(1, turnsPerPlayer(ids.length));
+    const holders = holderOrder(ids, turns).slice(0, CONCEPTS.length);
+    const concepts = shuffle(CONCEPTS.map((_, i) => i)).slice(0, holders.length);
+    const plan = { holders, concepts };
+    return gameRef.update({ plan })
+      .then(() => { game.plan = plan; return startRound(0); });
   }
 
   function roundData(roundIdx, conceptIndex, holder) {
@@ -372,7 +397,11 @@
       const info = $('lobby-rounds');
       if (nPlayers < 2) info.textContent = '';
       else if (nPlayers <= CONCEPTS.length) {
-        info.textContent = `${nPlayers} joueurs : ${nPlayers} manches, ${nPlayers} concepts tirés au hasard parmi ${CONCEPTS.length}. Chaque joueur recevra la vraie définition exactement une fois.`;
+        const turns = turnsPerPlayer(nPlayers);
+        const rounds = turns * nPlayers;
+        const unused = CONCEPTS.length - rounds;
+        info.textContent = `${nPlayers} joueurs ou équipes : ${rounds} manches. Chacun recevra la vraie définition exactement ${turns} fois.`
+          + (unused > 0 ? ` (${unused} concept${unused > 1 ? 's' : ''} de la banque ne ser${unused > 1 ? 'ont' : 'a'} pas joué${unused > 1 ? 's' : ''}.)` : '');
         info.classList.remove('is-warning');
       } else {
         info.textContent = `${nPlayers} joueurs, mais seulement ${CONCEPTS.length} concepts dans la banque : ${nPlayers - CONCEPTS.length} joueur(s) ne recevront jamais la vraie définition. Ajoute des concepts dans js/concepts.js.`;

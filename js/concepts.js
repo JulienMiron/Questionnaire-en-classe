@@ -101,10 +101,5 @@ const CONCEPTS = [
     word: "Fonction de puissance",
     definition: "La fonction qui donne, pour chaque valeur possible du paramètre, la probabilité de rejeter H0.",
     explanation: "Sous H0, elle vaut $\\alpha$ ; elle augmente à mesure que le paramètre s'éloigne de la valeur postulée et que $n$ augmente."
-  },
-  {
-    word: "Test $t$ pour une moyenne",
-    definition: "Un test sur la moyenne d'une population normale dont la variance est inconnue, basé sur une loi de Student à $n-1$ degrés de liberté.",
-    explanation: "$T = \\dfrac{\\bar{X}-\\mu_0}{S/\\sqrt{n}}$ suit une $t_{n-1}$ sous H0."
   }
 ];
