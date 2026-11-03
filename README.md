@@ -197,10 +197,10 @@ tableau, et chacun vote pour celle qu'il croit vraie.
    équipe passe une fois par tour, jamais deux manches de suite. Après le
    début, on ne peut plus s'inscrire (seulement reprendre sa place).
    - À chaque manche, le concept s'affiche sur tous les écrans. Le joueur
-     dont c'est le tour voit la vraie définition et doit la **réécrire dans
-     ses mots**, sans en changer le sens. Une réécriture identique à
-     l'originale est refusée. S'il n'envoie rien, l'originale est utilisée
-     telle quelle et il ne marque pas de points.
+     dont c'est le tour voit la vraie définition. Il peut la copier-coller
+     telle quelle ou la **réécrire dans ses mots**, sans en changer le sens,
+     puis il l'envoie. S'il n'envoie rien, l'originale est utilisée telle
+     quelle et il ne marque pas de points.
    - Les autres écrivent leur fausse définition dans l'encadré, puis cliquent
      **Envoyer**. Ils peuvent la modifier jusqu'au début du vote.
    - L'écran de l'animateur affiche le nombre de définitions reçues, sans

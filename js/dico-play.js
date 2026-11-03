@@ -89,12 +89,6 @@
     const text = $('w-text').value.trim();
     if (!text) { $('w-sent').textContent = 'Ta définition est vide.'; return; }
     if (game.status !== 'writing') return;
-    const round = currentRound();
-    const squash = t => (t || '').toLowerCase().replace(/[\s.,;:!?«»"'’()-]+/g, '');
-    if (round && round.holder === myId && squash(text) === squash(round.original)) {
-      $('w-sent').textContent = 'Tu dois réécrire la définition dans tes mots.';
-      return;
-    }
     gameRef.child('rounds/' + game.round + '/entries/' + myId).set(text).then(() => {
       $('w-sent').textContent = 'Envoyée ✓';
       $('w-send').textContent = 'Mettre à jour';
@@ -180,7 +174,7 @@
       $('w-role').innerHTML = '';
       $('w-role').appendChild(el('strong', null, 'Le hasard t\'a remis la vraie définition.'));
       $('w-role').appendChild(document.createTextNode(
-        ' Réécris-la dans tes mots, sans en changer le sens. Tu gagnes ' + pts(S.pointsHolderPerFinder) +
+        ' Copie-la telle quelle ou réécris-la dans tes mots, sans en changer le sens, puis envoie-la. Tu gagnes ' + pts(S.pointsHolderPerFinder) +
         ' par joueur qui la trouve… mais rien si personne ou tout le monde la trouve. Garde le secret !'));
       $('w-role').className = 'dico-role is-holder';
       $('w-original-label').style.display = 'block';
