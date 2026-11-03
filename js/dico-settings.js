@@ -2,9 +2,9 @@
 const DICO_SETTINGS = {
   // Temps pour écrire une définition, en secondes (0 = pas de chrono :
   // l'animateur passe au vote lui-même).
-  writingTime: 150,
+  writingTime: 210,
   // Temps pour voter, en secondes (0 = pas de chrono).
-  votingTime: 60,
+  votingTime: 90,
   // Points pour un joueur qui vote pour la vraie définition.
   pointsCorrectVote: 2,
   // Points pour l'auteur d'une fausse définition, pour chaque vote reçu.
